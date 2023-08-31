@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.statusCode == 200) {
         // Successfully logged in, navigate to the next screen
         // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, '/QrScrenn'); // Replace '/home' with your desired route
+        Navigator.pushReplacementNamed(context, '/Home'); // Replace '/home' with your desired route
       } else {
         // Handle login error, display an error message to the user
         // ignore: use_build_context_synchronously
