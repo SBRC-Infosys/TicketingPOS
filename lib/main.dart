@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ticketing_system/screens/first_sceen.dart';
-import 'package:ticketing_system/screens/login_screen.dart';
-import 'package:ticketing_system/widgets/qr_code_widget.dart';
 
+import 'package:ticketing_system/widgets/drawer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,10 +22,9 @@ class MyApp extends StatelessWidget {
         title: "Ticket",
         initialRoute: "/",
         routes: {
-          "/": (context) => const FirstScreen(),
-          "/LoginScreen": (context) => const LoginScreen(),
-          "/QrScrenn": (context) => const QRCodeWidget(),
-
+          "/": (context) => const NavigationBarApp(),
+          // "/LoginScreen": (context) => const LoginScreen(),
+          // "/QrScrenn": (context) => const QRCodeWidget(),
         });
   }
 }
