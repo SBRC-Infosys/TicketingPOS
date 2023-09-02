@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:ticketing_system/screens/first_sceen.dart';
 import 'package:ticketing_system/screens/home_page.dart';
 import 'package:ticketing_system/screens/login_screen.dart';
+import 'package:ticketing_system/screens/membersType.dart';
+import 'package:ticketing_system/screens/membership.dart';
+import 'package:ticketing_system/screens/memebersTypeList.dart';
 import 'package:ticketing_system/screens/service.dart';
 import 'package:ticketing_system/screens/servicelist.dart';
 
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
         title: "Ticket",
         initialRoute: "/",
         routes: {
-          "/": (context) =>  ServiceListScreen(),
+          "/": (context) =>  CreateMemberScreen(),
           // "/LoginScreen": (context) => const LoginScreen(),
           // "/Home": (context) => const HomePage(),
        

@@ -1,49 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class CreateServiceScreen extends StatefulWidget {
-  const CreateServiceScreen({Key? key}) : super(key: key);
+class CreateMembershipTypeScreen extends StatefulWidget {
+  const CreateMembershipTypeScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CreateServiceScreenState createState() => _CreateServiceScreenState();
+  _CreateMembershipTypeScreenState createState() =>
+      _CreateMembershipTypeScreenState();
 }
 
-class _CreateServiceScreenState extends State<CreateServiceScreen> {
+class _CreateMembershipTypeScreenState
+    extends State<CreateMembershipTypeScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _serviceNameController = TextEditingController();
+  final TextEditingController _membershipTypeController =
+      TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _timeDurationController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
+  String _selectedStatus = 'active';
+  final TextEditingController _discountPercentageController =
+      TextEditingController();
 
-  Future<void> _createService() async {
+  List<String> _statusOptions = ['active', 'inactive'];
+
+  Future<void> _createMembershipType() async {
     if (_formKey.currentState!.validate()) {
-      final String serviceName = _serviceNameController.text;
+      final String membershipType = _membershipTypeController.text;
       final String description = _descriptionController.text;
-      final String timeDuration = _timeDurationController.text;
-      final String price = _priceController.text;
+      final String status = _selectedStatus;
+      final String discountPercentage = _discountPercentageController.text;
 
       try {
         final response = await http.post(
-          Uri.parse(
-              'http://[2400:1a00:b030:9fa0::2]:5000/api/service'),
+          Uri.parse('http://[2400:1a00:b030:9fa0::2]:5000/api/membershipType'),
           body: {
-            'serviceName': serviceName,
+            'membershipType': membershipType,
             'description': description,
-            'timeDuration': timeDuration,
-            'price': price,
+            'status': status,
+            'discountPercentage': discountPercentage,
           },
         );
 
         if (response.statusCode == 201) {
-          // Service created successfully, show an alert
-          // ignore: use_build_context_synchronously
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('Service Created'),
-                content: const Text('Service has been created successfully.'),
+                title: const Text('Success'),
+                content: const Text(
+                    'Membership type has been created successfully.'),
                 actions: <Widget>[
                   TextButton(
                     child: const Text('OK'),
@@ -56,14 +59,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
             },
           );
 
-          // Clear the text controllers to reset the form
-          _serviceNameController.clear();
+          _membershipTypeController.clear();
           _descriptionController.clear();
-          _timeDurationController.clear();
-          _priceController.clear();
+          _selectedStatus = 'active'; // Reset status dropdown
+          _discountPercentageController.clear();
         } else {}
       } catch (e) {
-        // Handle any network or server errors
         print('Error: $e');
       }
     }
@@ -73,7 +74,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Service'),
+        title: const Text('Add Membership Type'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -82,14 +83,14 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
           child: ListView(
             children: [
               TextFormField(
-                controller: _serviceNameController,
+                controller: _membershipTypeController,
                 decoration: const InputDecoration(
-                  labelText: 'Service Name',
+                  labelText: 'Membership Type',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter a service name';
+                    return 'Please enter a membership type';
                   }
                   return null;
                 },
@@ -109,37 +110,42 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _timeDurationController,
-                decoration: const InputDecoration(
-                  labelText: 'Time Duration',
+              DropdownButtonFormField<String>(
+                value: _selectedStatus,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedStatus = value!;
+                  });
+                },
+                items: _statusOptions.map((String status) {
+                  return DropdownMenuItem<String>(
+                    value: status,
+                    child: Text(status),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Status',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a time duration';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _priceController,
+                controller: _discountPercentageController,
                 decoration: const InputDecoration(
-                  labelText: 'Price',
+                  labelText: 'Discount Percentage',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter a price';
+                    return 'Please enter a discount percentage';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _createService,
-                child: const Text('Create Service'),
+                onPressed: _createMembershipType,
+                child: const Text('Create'),
               ),
             ],
           ),
