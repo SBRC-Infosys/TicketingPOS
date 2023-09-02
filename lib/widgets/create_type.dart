@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_system/provider/serviceProvider.dart';
+import 'package:ticketing_system/provider/membershipProvider.dart';
 
-class CreateServiceDialog extends StatefulWidget {
-  const CreateServiceDialog({Key? key}) : super(key: key);
+
+class CreateMembershipTypeDialog extends StatefulWidget {
+  const CreateMembershipTypeDialog({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CreateServiceDialogState createState() => _CreateServiceDialogState();
+  _CreateMembershipTypeDialogState createState() => _CreateMembershipTypeDialogState();
 }
 
-class _CreateServiceDialogState extends State<CreateServiceDialog> {
+class _CreateMembershipTypeDialogState extends State<CreateMembershipTypeDialog> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _serviceNameController = TextEditingController();
+  final TextEditingController _membershipTypeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _timeDurationController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
+  final TextEditingController _discountPercentageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Create Service'),
+      title: const Text('Create Membership Type'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -27,14 +27,14 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: _serviceNameController,
+                controller: _membershipTypeController,
                 decoration: const InputDecoration(
-                  labelText: 'Service Name',
+                  labelText: 'Membership Type',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a service name';
+                    return 'Please enter a membership type';
                   }
                   return null;
                 },
@@ -55,28 +55,28 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _timeDurationController,
+                controller: _statusController,
                 decoration: const InputDecoration(
-                  labelText: 'Time Duration',
+                  labelText: 'Status',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a time duration';
+                    return 'Please enter a status';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _priceController,
+                controller: _discountPercentageController,
                 decoration: const InputDecoration(
-                  labelText: 'Price',
+                  labelText: 'Discount Percentage',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a price';
+                    return 'Please enter a discount percentage';
                   }
                   return null;
                 },
@@ -95,23 +95,23 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
         ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              final serviceName = _serviceNameController.text;
+              final membershipType = _membershipTypeController.text;
               final description = _descriptionController.text;
-              final timeDuration = _timeDurationController.text;
-              final price = _priceController.text;
+              final status = _statusController.text;
+              final discountPercentage = _discountPercentageController.text;
 
-              await ServiceProvider().createService(
-                serviceName: serviceName,
+              await MembershipTypeProvider().createMembershipType(
+                membershipType: membershipType,
                 description: description,
-                timeDuration: timeDuration,
-                price: price,
+                status: status,
+                discountPercentage: discountPercentage,
               );
 
               Navigator.of(context).pop();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Service created successfully'),
+                  content: Text('Membership Type created successfully'),
                 ),
               );
             }

@@ -1,79 +1,74 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ServiceProvider with ChangeNotifier {
-  static const String baseUrl =
-      'http://[2400:1a00:b030:9869::2]:5000/api/service';
+class MembershipTypeProvider with ChangeNotifier {
+  static const String baseUrl = 'http://[2400:1a00:b030:9869::2]:5000/api/membershipType';
 
-  List<dynamic> services = [];
+  List<dynamic> membershipTypes = [];
 
   // Constructor
-  ServiceProvider();
+  MembershipTypeProvider();
 
-  // Fetch services from the API
-  Future<void> fetchServices() async {
+  // Fetch membership types from the API
+  Future<void> fetchMembershipTypes() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/services'));
+      final response = await http.get(Uri.parse('$baseUrl/fetch'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        services = data['services'];
+        membershipTypes = data['membershipTypes'];
         notifyListeners();
       } else {
-
         handleErrorResponse(response);
       }
     } catch (e) {
-     
       print('Error: $e');
     }
   }
 
-  // Create a new service
-  Future<void> createService({
-    required String serviceName,
+  // Create a new membership type
+  Future<void> createMembershipType({
+    required String membershipType,
     required String description,
-    required String timeDuration,
-    required String price,
+    required String status,
+    required String discountPercentage,
   }) async {
-    final Map<String, dynamic> serviceData = {
-      'serviceName': serviceName,
+    final Map<String, dynamic> membershipTypeData = {
+      'membershipType': membershipType,
       'description': description,
-      'timeDuration': timeDuration,
-      'price': price,
+      'status': status,
+      'discountPercentage': discountPercentage,
     };
 
-    // ignore: unnecessary_string_interpolations
-    final response = await _postRequest('$baseUrl', body: serviceData);
+    final response = await _postRequest('$baseUrl', body: membershipTypeData);
 
     if (response.statusCode == 201) {
       final responseData = json.decode(response.body);
-      final newService = responseData['service'];
-      services.add(newService);
+      final newMembershipType = responseData['membershipType'];
+      membershipTypes.add(newMembershipType);
       notifyListeners();
     } else {
       handleErrorResponse(response);
     }
   }
 
-  // Edit an existing service
-  Future<void> editService({
-    required int serviceId,
-    required String serviceName,
+  // Edit an existing membership type
+  Future<void> editMembershipType({
+    required int membershipTypeId,
+    required String membershipType,
     required String description,
-    required String timeDuration,
-    required String price,
+    required String status,
+    required String discountPercentage,
   }) async {
-    final Map<String, dynamic> serviceData = {
-      'serviceName': serviceName,
+    final Map<String, dynamic> membershipTypeData = {
+      'membershipType': membershipType,
       'description': description,
-      'timeDuration': timeDuration,
-      'price': price,
+      'status': status,
+      'discountPercentage': discountPercentage,
     };
 
-    final response = await _putRequest('$baseUrl/edit/$serviceId', body: serviceData);
+    final response = await _putRequest('$baseUrl/edit/$membershipTypeId', body: membershipTypeData);
 
     if (response.statusCode == 200) {
       notifyListeners();
@@ -82,9 +77,9 @@ class ServiceProvider with ChangeNotifier {
     }
   }
 
-  // Delete a service by its ID
-  Future<void> deleteService(int serviceId) async {
-    final response = await _deleteRequest('$baseUrl/services/$serviceId');
+  // Delete a membership type by its ID
+  Future<void> deleteMembershipType(int membershipTypeId) async {
+    final response = await _deleteRequest('$baseUrl/delete/$membershipTypeId');
 
     if (response.statusCode == 200) {
       notifyListeners();
