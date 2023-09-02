@@ -2,34 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ServiceListScreen extends StatefulWidget {
-  const ServiceListScreen({Key? key}) : super(key: key);
+class MemberListScreen extends StatefulWidget {
+  const MemberListScreen({Key? key}) : super(key: key);
 
   @override
-  _ServiceListScreenState createState() => _ServiceListScreenState();
+  _MemberListScreenState createState() => _MemberListScreenState();
 }
 
-class _ServiceListScreenState extends State<ServiceListScreen> {
-  List<dynamic> services = [];
+class _MemberListScreenState extends State<MemberListScreen> {
+  List<dynamic> members = [];
 
-  Future<void> _fetchServices() async {
+  Future<void> _fetchMembers() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'http://[2400:1a00:b030:9fa0::2]:5000/api/service/services'), // Replace with your API endpoint
+         Uri.parse('http://[2400:1a00:b030:9fa0::2]:5000/api/member/fetch'), // Replace with your API endpoint
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          services = data['services'];
+          members = data['members'];
         });
       } else {
         // Handle error, show an error message to the user
         // For example:
         // ScaffoldMessenger.of(context).showSnackBar(
         //   SnackBar(
-        //     content: Text('Failed to fetch services'),
+        //     content: Text('Failed to fetch members'),
         //   ),
         // );
       }
@@ -42,25 +41,25 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchServices();
+    _fetchMembers();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Service List'),
+        title: Text('Member List'),
       ),
       body: ListView.builder(
-        itemCount: services.length,
+        itemCount: members.length,
         itemBuilder: (BuildContext context, int index) {
-          final service = services[index];
+          final member = members[index];
           return Card(
             elevation: 3, // Add shadow to the card
             margin: EdgeInsets.all(10), // Add margin around the card
             child: ListTile(
               title: Text(
-                service['serviceName'],
+                member['memberName'],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -70,15 +69,35 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Description: ${service['description']}',
+                    'Membership Type ID: ${member['membershipTypeId']}',
                     style: TextStyle(fontSize: 14),
                   ),
                   Text(
-                    'Duration: ${service['timeDuration']} minutes',
+                    'Address: ${member['memberAddress']}',
                     style: TextStyle(fontSize: 14),
                   ),
                   Text(
-                    'Price: \$${service['price']}',
+                    'Email: ${member['memberEmail']}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Phone: ${member['memberPhone']}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Start Date: ${member['startDate']}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'End Date: ${member['endDate'] ?? 'N/A'}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Status: ${member['status']}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Discount Percentage: ${member['discountPercentage']}%',
                     style: TextStyle(fontSize: 14),
                   ),
                 ],

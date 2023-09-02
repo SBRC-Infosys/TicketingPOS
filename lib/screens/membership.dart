@@ -11,7 +11,6 @@ class MembershipType {
   MembershipType(this.id, this.membershipType, this.discountPercentage);
 }
 
-
 class CreateMemberScreen extends StatefulWidget {
   const CreateMemberScreen({Key? key}) : super(key: key);
 
@@ -37,44 +36,43 @@ class _CreateMemberScreenState extends State<CreateMemberScreen> {
   String? _selectedStatus;
   MembershipType? _selectedMembershipType;
   double? _discountPercentage;
-    List<String> _statusOptions = [
+  List<String> _statusOptions = [
     'Active',
     'Inactive'
   ]; // Membership status options
 
   List<MembershipType> _membershipTypes = [];
 
-Future<void> _fetchMembershipTypes() async {
-  try {
-    final response = await http.get(
-      Uri.parse(
-          'http://[2400:1a00:b030:9fa0::2]:5000/api/membershipType/fetch'),
-    );
+  Future<void> _fetchMembershipTypes() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://[2400:1a00:b030:9fa0::2]:5000/api/membershipType/fetch'),
+      );
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final membershipTypeList = (data['membershipTypes'] as List)
-          .map((typeData) => MembershipType(
-                typeData['id'],
-                typeData['membershipType'],
-                double.parse(typeData['discountPercentage']),
-              ))
-          .toList();
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final membershipTypeList = (data['membershipTypes'] as List)
+            .map((typeData) => MembershipType(
+                  typeData['id'],
+                  typeData['membershipType'],
+                  double.parse(typeData['discountPercentage']),
+                ))
+            .toList();
 
-      setState(() {
-        _membershipTypes = membershipTypeList;
-        print('Membership Types: $_membershipTypes');
-      });
-    } else {
-      // Handle error
-      print('Failed to fetch membership types');
+        setState(() {
+          _membershipTypes = membershipTypeList;
+          print('Membership Types: $_membershipTypes');
+        });
+      } else {
+        // Handle error
+        print('Failed to fetch membership types');
+      }
+    } catch (e) {
+      // Handle network or server errors
+      print('Error: $e');
     }
-  } catch (e) {
-    // Handle network or server errors
-    print('Error: $e');
   }
-}
-
 
   @override
   void initState() {
@@ -82,74 +80,73 @@ Future<void> _fetchMembershipTypes() async {
     _fetchMembershipTypes();
   }
 
-Future<void> _createMember() async {
-  if (_formKey.currentState!.validate()) {
-    final String memberName = _memberNameController.text;
-    final String memberAddress = _memberAddressController.text;
-    final String memberEmail = _memberEmailController.text;
-    final String memberPhone = _memberPhoneController.text;
-    final String startDate = _selectedStartDate?.toLocal().toString() ?? '';
-    final String endDate = _selectedEndDate?.toLocal().toString() ?? '';
-    final String status = _selectedStatus ?? '';
-    final int? membershipTypeId = _selectedMembershipType?.id;
-    final double? discountPercentage = _selectedMembershipType?.discountPercentage;
+  Future<void> _createMember() async {
+    if (_formKey.currentState!.validate()) {
+      final String memberName = _memberNameController.text;
+      final String memberAddress = _memberAddressController.text;
+      final String memberEmail = _memberEmailController.text;
+      final String memberPhone = _memberPhoneController.text;
+      final String startDate = _selectedStartDate?.toLocal().toString() ?? '';
+      final String endDate = _selectedEndDate?.toLocal().toString() ?? '';
+      final String status = _selectedStatus ?? '';
+      final int? membershipTypeId = _selectedMembershipType?.id;
+      final double? discountPercentage =
+          _selectedMembershipType?.discountPercentage;
 
-    try {
-      final response = await http.post(
-        Uri.parse('http://[2400:1a00:b030:9fa0::2]:5000/api/member/create'),
-        body: {
-          'membershipTypeId': membershipTypeId.toString(),
-          'memberName': memberName,
-          'memberAddress': memberAddress,
-          'memberEmail': memberEmail,
-          'memberPhone': memberPhone,
-          'startDate': startDate,
-          'endDate': endDate,
-          'status': status,
-          'discountPercentage': discountPercentage?.toStringAsFixed(2) ?? '',
-        },
-      );
-
-      if (response.statusCode == 201) {
-        // Member created successfully, show an alert
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Member Created'),
-              content: const Text('Member has been created successfully.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the alert dialog
-                  },
-                ),
-              ],
-            );
+      try {
+        final response = await http.post(
+          Uri.parse('http://[2400:1a00:b030:9fa0::2]:5000/api/member/create'),
+          body: {
+            'membershipTypeId': membershipTypeId.toString(),
+            'memberName': memberName,
+            'memberAddress': memberAddress,
+            'memberEmail': memberEmail,
+            'memberPhone': memberPhone,
+            'startDate': startDate,
+            'endDate': endDate,
+            'status': status,
+            'discountPercentage': discountPercentage?.toStringAsFixed(2) ?? '',
           },
         );
 
-        // Clear the text controllers and selected values to reset the form
-        _memberNameController.clear();
-        _memberAddressController.clear();
-        _memberEmailController.clear();
-        _memberPhoneController.clear();
-        _selectedStartDate = null;
-        _selectedEndDate = null;
-        _selectedStatus = null;
-        _selectedMembershipType = null;
-      } else {
-        // Handle API response status codes other than 201 as needed
+        if (response.statusCode == 201) {
+          // Member created successfully, show an alert
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Member Created'),
+                content: const Text('Member has been created successfully.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the alert dialog
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+
+          // Clear the text controllers and selected values to reset the form
+          _memberNameController.clear();
+          _memberAddressController.clear();
+          _memberEmailController.clear();
+          _memberPhoneController.clear();
+          _selectedStartDate = null;
+          _selectedEndDate = null;
+          _selectedStatus = null;
+          _selectedMembershipType = null;
+        } else {
+          // Handle API response status codes other than 201 as needed
+        }
+      } catch (e) {
+        // Handle any network or server errors
+        print('Error: $e');
       }
-    } catch (e) {
-      // Handle any network or server errors
-      print('Error: $e');
     }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +161,7 @@ Future<void> _createMember() async {
           child: ListView(
             children: [
               // Membership Type Dropdown
-                DropdownButtonFormField<MembershipType>(
+              DropdownButtonFormField<MembershipType>(
                 value: _selectedMembershipType,
                 onChanged: (MembershipType? value) {
                   setState(() {
@@ -318,7 +315,7 @@ Future<void> _createMember() async {
               const SizedBox(height: 16),
 
               // Discount Percentage
-           
+
               const SizedBox(height: 20),
 
               // Create Member Button

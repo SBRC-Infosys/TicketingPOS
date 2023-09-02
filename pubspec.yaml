@@ -20,6 +20,8 @@ dependencies:
   flutter_svg: ^2.0.5
   google_fonts: ^4.0.4
   intl: ^0.18.1
+  provider: ^6.0.5
+  dynamic_color: ^1.6.6
 
 dev_dependencies:
   flutter_test:

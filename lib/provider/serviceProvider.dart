@@ -1,0 +1,55 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class ServiceProvider with ChangeNotifier {
+  static const String baseUrl =
+      'http://[2400:1a00:b030:9869::2]:5000/api/service';
+
+  List<dynamic> services = [];
+
+  Future<void> fetchServices() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/services'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        services = data['services'];
+        notifyListeners();
+      } else {}
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> createService({
+    required String serviceName,
+    required String description,
+    required String timeDuration,
+    required String price,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl'),
+        body: {
+          'serviceName': serviceName,
+          'description': description,
+          'timeDuration': timeDuration,
+          'price': price,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        // Service created successfully, you can handle the response if needed
+        // For example, you can parse and store the created service data
+        // Then notify listeners to update UI if needed
+        notifyListeners();
+      } else {
+        // Handle error cases, you can show an error message to the user
+      }
+    } catch (e) {
+      // Handle any network or server errors
+      print('Error: $e');
+    }
+  }
+}
