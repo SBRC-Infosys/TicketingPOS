@@ -11,14 +11,14 @@ class MembershipType {
   MembershipType(this.id, this.membershipType, this.discountPercentage);
 }
 
-class CreateMemberScreen extends StatefulWidget {
-  const CreateMemberScreen({Key? key}) : super(key: key);
+class CreateMemberDialog extends StatefulWidget {
+  const CreateMemberDialog({Key? key}) : super(key: key);
 
   @override
-  _CreateMemberScreenState createState() => _CreateMemberScreenState();
+  _CreateMemberDialogState createState() => _CreateMemberDialogState();
 }
 
-class _CreateMemberScreenState extends State<CreateMemberScreen> {
+class _CreateMemberDialogState extends State<CreateMemberDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _memberNameController = TextEditingController();
   final TextEditingController _memberAddressController =
@@ -47,7 +47,7 @@ class _CreateMemberScreenState extends State<CreateMemberScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://[2400:1a00:b030:9fa0::2]:5000/api/membershipType/fetch'),
+            'http://[2400:1a00:b030:9869::2]:5000/api/membershipType/fetch'),
       );
 
       if (response.statusCode == 200) {
@@ -95,7 +95,7 @@ class _CreateMemberScreenState extends State<CreateMemberScreen> {
 
       try {
         final response = await http.post(
-          Uri.parse('http://[2400:1a00:b030:9fa0::2]:5000/api/member/create'),
+          Uri.parse('http://[2400:1a00:b030:9869::2]:5000/api/member/create'),
           body: {
             'membershipTypeId': membershipTypeId.toString(),
             'memberName': memberName,
@@ -150,15 +150,13 @@ class _CreateMemberScreenState extends State<CreateMemberScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Member'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return AlertDialog(
+      title: const Text('Create Member'),
+      content: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Membership Type Dropdown
               DropdownButtonFormField<MembershipType>(
