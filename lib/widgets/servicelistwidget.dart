@@ -102,15 +102,24 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
             ElevatedButton(
               onPressed: () {
                 // Call the editService function with updated data
-                final serviceProvider =
+                  final serviceProvider =
                     Provider.of<ServiceProvider>(context, listen: false);
-                serviceProvider.editService(
+
+                serviceProvider
+                    .editService(
                   serviceId: service['id'], // Pass the service ID
                   serviceName: updatedServiceName,
                   description: updatedDescription,
                   timeDuration: updatedTimeDuration,
                   price: updatedPrice,
-                );
+                )
+                    .then((_) {
+                  serviceProvider
+                      .fetchServices(); // Fetch the updated list of services
+                }).catchError((error) {
+                  // Handle errors here
+                  print('Error editing service: $error');
+                });
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Text('Save'),
@@ -140,7 +149,13 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 // Call the deleteService function with the service ID
                 final serviceProvider =
                     Provider.of<ServiceProvider>(context, listen: false);
-                serviceProvider.deleteService(serviceId);
+                serviceProvider.deleteService(serviceId).then((_) {
+                  serviceProvider
+                      .fetchServices(); // Fetch the updated list of services
+                }).catchError((error) {
+                  // Handle errors here
+                  print('Error deleting service: $error');
+                });
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: Text('Delete'),
