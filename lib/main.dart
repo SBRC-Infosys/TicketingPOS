@@ -4,6 +4,7 @@ import 'package:ticketing_system/screens/first_sceen.dart';
 import 'package:ticketing_system/screens/home_page.dart';
 import 'package:ticketing_system/screens/login_screen.dart';
 import 'package:ticketing_system/screens/service.dart';
+import 'package:ticketing_system/screens/servicelist.dart';
 
 
 
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         title: "Ticket",
         initialRoute: "/",
         routes: {
-          "/": (context) =>  CreateServiceScreen(),
+          "/": (context) =>  ServiceListScreen(),
           // "/LoginScreen": (context) => const LoginScreen(),
           // "/Home": (context) => const HomePage(),
        
