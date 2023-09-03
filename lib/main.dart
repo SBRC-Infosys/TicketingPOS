@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:ticketing_system/provider/memberProvider.dart';
-import 'package:ticketing_system/provider/membershipProvider.dart';
+
 import 'package:ticketing_system/provider/serviceProvider.dart';
-import 'package:ticketing_system/provider/transactionProvider.dart';
+
 import 'package:ticketing_system/screens/first_sceen.dart';
 import 'package:ticketing_system/screens/home_page.dart';
 import 'package:ticketing_system/screens/login_screen.dart';
-import 'package:ticketing_system/screens/member.dart';
-import 'package:ticketing_system/screens/memberType.dart';
-import 'package:ticketing_system/screens/membership.dart';
+
 import 'package:ticketing_system/screens/service.dart';
-import 'package:ticketing_system/screens/transaction.dart';
-import 'package:ticketing_system/widgets/create_transaction.dart';
-
-
-
-
-
+import 'package:ticketing_system/screens/service_card.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +21,6 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ServiceProvider()),
-          ChangeNotifierProvider(create: (context) => MembershipTypeProvider()), // Add this line
-           ChangeNotifierProvider(create: (context) => MemberProvider()),
-            ChangeNotifierProvider(create: (context) => TransactionProvider()),
         ],
         child: const MyApp(),
       ),
@@ -54,7 +42,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) => const CreateTransactionPage(),
+        "/": (context) =>  ServiceListPage(),
         // Add your other routes here...
       },
     );
