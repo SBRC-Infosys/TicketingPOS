@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticketing_system/provider/memberProvider.dart'; // Import your member provider
 import 'package:ticketing_system/screens/membership.dart';
-import 'package:ticketing_system/screens/membershiplist.dart';
-import 'package:ticketing_system/widgets/create_member.dart';
+
+
 import 'package:ticketing_system/widgets/memberlistwidget.dart'; // Import your create member dialog
 
 

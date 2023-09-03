@@ -47,7 +47,7 @@ class _CreateMemberDialogState extends State<CreateMemberDialog> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://[2400:1a00:b030:9869::2]:5000/api/membershipType/fetch'),
+            'http://[2400:1a00:b030:3592::2]:5000/api/membershipType/fetch'),
       );
 
       if (response.statusCode == 200) {
@@ -95,7 +95,7 @@ class _CreateMemberDialogState extends State<CreateMemberDialog> {
 
       try {
         final response = await http.post(
-          Uri.parse('http://[2400:1a00:b030:9869::2]:5000/api/member/create'),
+          Uri.parse('http://[2400:1a00:b030:3592::2]:5000/api/member/create'),
           body: {
             'membershipTypeId': membershipTypeId.toString(),
             'memberName': memberName,
@@ -111,6 +111,7 @@ class _CreateMemberDialogState extends State<CreateMemberDialog> {
 
         if (response.statusCode == 201) {
           // Member created successfully, show an alert
+          // ignore: use_build_context_synchronously
           showDialog(
             context: context,
             builder: (BuildContext context) {
