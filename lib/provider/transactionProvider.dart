@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class TransactionProvider with ChangeNotifier {
   static const String baseUrl =
-      'http://[2400:1a00:b030:3592::2]:5000/api/transaction';
+      'http://[2400:1a00:b030:5aff::2]:5000/api/transaction';
 
   List<dynamic> transactions = [];
 

@@ -5,7 +5,7 @@ import 'dart:convert';
 
 class ServiceProvider with ChangeNotifier {
   static const String baseUrl =
-      'http://[2400:1a00:b030:3592::2]:5000/api/service';
+      'http://[2400:1a00:b030:5aff::2]:5000/api/service';
 
   List<dynamic> services = [];
 

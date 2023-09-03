@@ -13,6 +13,7 @@ import 'package:ticketing_system/screens/memberType.dart';
 import 'package:ticketing_system/screens/membership.dart';
 import 'package:ticketing_system/screens/service.dart';
 import 'package:ticketing_system/screens/transaction.dart';
+import 'package:ticketing_system/widgets/create_transaction.dart';
 
 
 
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) => const ManageTransactionsScreen(),
+        "/": (context) => const CreateTransactionPage(),
         // Add your other routes here...
       },
     );

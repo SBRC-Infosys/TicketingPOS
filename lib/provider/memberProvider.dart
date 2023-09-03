@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class MemberProvider with ChangeNotifier {
-  static const String baseUrl = 'http://[2400:1a00:b030:3592::2]:5000/api/member';
+  static const String baseUrl = 'http://[2400:1a00:b030:5aff::2]:5000/api/member';
 
   List<dynamic> members = [];
 

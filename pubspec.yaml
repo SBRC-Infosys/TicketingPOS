@@ -22,6 +22,8 @@ dependencies:
   intl: ^0.18.1
   provider: ^6.0.5
   dynamic_color: ^1.6.6
+  qr_flutter: ^4.1.0
+  sunmi_printer_plus: ^2.1.01
 
 dev_dependencies:
   flutter_test:
