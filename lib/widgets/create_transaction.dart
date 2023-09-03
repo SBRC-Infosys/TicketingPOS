@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_system/provider/memberProvider.dart';
-
-import 'package:ticketing_system/provider/transactionProvider.dart'; // Import your TransactionProvider
+import 'package:ticketing_system/provider/transactionProvider.dart';
+import 'package:ticketing_system/provider/serviceProvider.dart'; // Import your ServiceProvider
 
 class CreateTransactionDialog extends StatefulWidget {
   const CreateTransactionDialog({Key? key}) : super(key: key);
@@ -13,22 +12,33 @@ class CreateTransactionDialog extends StatefulWidget {
 
 class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _membershipIdController = TextEditingController();
   final TextEditingController _discountAmountController =
       TextEditingController();
   final TextEditingController _discountPercentController =
       TextEditingController();
   final TextEditingController _totalAmountController = TextEditingController();
-
-  int? selectedServiceId;
-  int? selectedMemberId;
-
-  List<int> serviceIds = []; // Manually create a list to hold service IDs
+  int? _selectedServiceId; // Store the selected service ID
+  List<dynamic> _services = []; // List to store fetched services
 
   @override
   void initState() {
     super.initState();
-    // ServiceProvider().fetchServices(); Comment this out for now
-    MemberProvider().fetchMembers();
+    // Fetch services when the widget is initialized
+    _fetchServices();
+  }
+
+  // Fetch services using the ServiceProvider
+  Future<void> _fetchServices() async {
+    try {
+      final serviceProvider = ServiceProvider();
+      await serviceProvider.fetchServices();
+      setState(() {
+        _services = serviceProvider.services;
+      });
+    } catch (e) {
+      print('Error fetching services: $e');
+    }
   }
 
   @override
@@ -42,41 +52,34 @@ class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               DropdownButtonFormField<int>(
-                value: selectedServiceId,
-                onChanged: (value) {
-                  setState(() {
-                    selectedServiceId = value;
-                  });
-                },
-                items: serviceIds.map<DropdownMenuItem<int>>((id) {
+                value: _selectedServiceId,
+                items: _services.map<DropdownMenuItem<int>>((service) {
                   return DropdownMenuItem<int>(
-                    value: id,
-                    child: Text('Service ID: $id'),
+                    value: service['id'],
+                    child: Text(service['serviceName']),
                   );
                 }).toList(),
-                decoration: InputDecoration(
-                  labelText: 'Select Service',
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedServiceId = newValue;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Service ID',
                   border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select a service';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<int>(
-                value: selectedMemberId,
-                onChanged: (value) {
-                  setState(() {
-                    selectedMemberId = value;
-                  });
-                },
-                items: MemberProvider()
-                    .members
-                    .map<DropdownMenuItem<int>>((member) {
-                  return DropdownMenuItem<int>(
-                    value: member['id'],
-                    child: Text(member['memberName']),
-                  );
-                }).toList(),
-                decoration: InputDecoration(
-                  labelText: 'Select Member',
+              TextFormField(
+                controller: _membershipIdController,
+                decoration: const InputDecoration(
+                  labelText: 'Membership ID',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -123,25 +126,20 @@ class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
         ),
         ElevatedButton(
           onPressed: () async {
-            if (_formKey.currentState!.validate() &&
-                selectedServiceId != null &&
-                selectedMemberId != null) {
-              final serviceId = selectedServiceId!;
-              final membershipId = selectedMemberId!;
+            if (_formKey.currentState!.validate() && _selectedServiceId != null) {
+              final membershipId = int.tryParse(_membershipIdController.text);
               final discountAmount =
                   double.tryParse(_discountAmountController.text) ?? 0.0;
               final discountPercent =
                   double.tryParse(_discountPercentController.text) ?? 0.0;
               final totalAmount = double.parse(_totalAmountController.text);
-              final status = 'open'; // Set the default status to 'open'
 
               await TransactionProvider().createTransaction(
-                serviceId: serviceId,
+                serviceId: _selectedServiceId!,
                 membershipId: membershipId,
                 discountAmount: discountAmount,
                 discountPercent: discountPercent,
                 totalAmount: totalAmount,
-                status: status,
               );
 
               Navigator.of(context).pop();
