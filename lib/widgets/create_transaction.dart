@@ -1,22 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_system/provider/memberProvider.dart';
+
 import 'package:ticketing_system/provider/transactionProvider.dart'; // Import your TransactionProvider
 
 class CreateTransactionDialog extends StatefulWidget {
   const CreateTransactionDialog({Key? key}) : super(key: key);
 
   @override
-  _CreateTransactionDialogState createState() => _CreateTransactionDialogState();
+  _CreateTransactionDialogState createState() =>
+      _CreateTransactionDialogState();
 }
 
 class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _serviceIdController = TextEditingController();
-  final TextEditingController _membershipIdController = TextEditingController();
-  final TextEditingController _discountAmountController = TextEditingController();
-  final TextEditingController _discountPercentController = TextEditingController();
+  final TextEditingController _discountAmountController =
+      TextEditingController();
+  final TextEditingController _discountPercentController =
+      TextEditingController();
   final TextEditingController _totalAmountController = TextEditingController();
-  final TextEditingController _departureTimeController = TextEditingController();
-  final TextEditingController _statusController = TextEditingController();
+
+  int? selectedServiceId;
+  int? selectedMemberId;
+
+  List<int> serviceIds = []; // Manually create a list to hold service IDs
+
+  @override
+  void initState() {
+    super.initState();
+    // ServiceProvider().fetchServices(); Comment this out for now
+    MemberProvider().fetchMembers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +41,42 @@ class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
-                controller: _serviceIdController,
-                decoration: const InputDecoration(
-                  labelText: 'Service ID',
+              DropdownButtonFormField<int>(
+                value: selectedServiceId,
+                onChanged: (value) {
+                  setState(() {
+                    selectedServiceId = value;
+                  });
+                },
+                items: serviceIds.map<DropdownMenuItem<int>>((id) {
+                  return DropdownMenuItem<int>(
+                    value: id,
+                    child: Text('Service ID: $id'),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Select Service',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a service ID';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _membershipIdController,
-                decoration: const InputDecoration(
-                  labelText: 'Membership ID',
+              DropdownButtonFormField<int>(
+                value: selectedMemberId,
+                onChanged: (value) {
+                  setState(() {
+                    selectedMemberId = value;
+                  });
+                },
+                items: MemberProvider()
+                    .members
+                    .map<DropdownMenuItem<int>>((member) {
+                  return DropdownMenuItem<int>(
+                    value: member['id'],
+                    child: Text(member['memberName']),
+                  );
+                }).toList(),
+                decoration: InputDecoration(
+                  labelText: 'Select Member',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -79,28 +110,6 @@ class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _departureTimeController,
-                decoration: const InputDecoration(
-                  labelText: 'Departure Time',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a departure time';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _statusController,
-                decoration: const InputDecoration(
-                  labelText: 'Status',
-                  border: OutlineInputBorder(),
-                ),
-              ),
             ],
           ),
         ),
@@ -114,14 +123,17 @@ class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
         ),
         ElevatedButton(
           onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              final serviceId = int.parse(_serviceIdController.text);
-              final membershipId = int.tryParse(_membershipIdController.text);
-              final discountAmount = double.tryParse(_discountAmountController.text) ?? 0.0;
-              final discountPercent = double.tryParse(_discountPercentController.text) ?? 0.0;
+            if (_formKey.currentState!.validate() &&
+                selectedServiceId != null &&
+                selectedMemberId != null) {
+              final serviceId = selectedServiceId!;
+              final membershipId = selectedMemberId!;
+              final discountAmount =
+                  double.tryParse(_discountAmountController.text) ?? 0.0;
+              final discountPercent =
+                  double.tryParse(_discountPercentController.text) ?? 0.0;
               final totalAmount = double.parse(_totalAmountController.text);
-              final departureTime = DateTime.tryParse(_departureTimeController.text) ?? DateTime.now();
-              final status = _statusController.text;
+              final status = 'open'; // Set the default status to 'open'
 
               await TransactionProvider().createTransaction(
                 serviceId: serviceId,
@@ -129,7 +141,6 @@ class _CreateTransactionDialogState extends State<CreateTransactionDialog> {
                 discountAmount: discountAmount,
                 discountPercent: discountPercent,
                 totalAmount: totalAmount,
-                departureTime: departureTime,
                 status: status,
               );
 

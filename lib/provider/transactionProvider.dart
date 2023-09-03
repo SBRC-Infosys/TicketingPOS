@@ -35,7 +35,6 @@ class TransactionProvider with ChangeNotifier {
     required double discountAmount,
     required double discountPercent,
     required double totalAmount,
-    required DateTime departureTime,
     String status = 'open',
   }) async {
     final Map<String, dynamic> transactionData = {
@@ -44,7 +43,6 @@ class TransactionProvider with ChangeNotifier {
       'discountAmount': discountAmount,
       'discountPercent': discountPercent,
       'totalAmount': totalAmount,
-      'departureTime': departureTime.toIso8601String(),
       'status': status,
     };
 
