@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) => const QRCodeWidget(),
+        "/": (context) => const CreateServiceScreen(),
         // Add your other routes here...
       },
     );
