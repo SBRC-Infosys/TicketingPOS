@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ticketing_system/widgets/rounded_button.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,56 +18,60 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _passwordVisible = false;
 
   Future<void> _login() async {
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
+  final String email = _emailController.text;
+  final String password = _passwordController.text;
 
-    try {
-      final response = await http.post(
-        Uri.parse('http://[2400:1a00:b030:5aff::2]:5000/api/user/login'),
-        body: {
-          'email': email,
-          'password': password,
+  try {
+    final response = await http.post(
+      Uri.parse('http://[2400:1a00:b030:5aff::2]:5000/api/user/login'),
+      body: {
+        'email': email,
+        'password': password,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Parse the JSON response
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final String role = responseData['role'];
+
+      // Store user login status and role
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true);
+      prefs.setString('userRole', role);
+
+      // Redirect based on role
+      if (role == 'user') {
+        Navigator.pushReplacementNamed(context, '/UserHome');
+      } else if (role == 'admin') {
+        Navigator.pushReplacementNamed(context, '/AdminHome');
+      }
+    } else {
+      // Handle login error
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Login Error'),
+            content: const Text('Invalid email or password.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
         },
       );
-
-      if (response.statusCode == 200) {
-        // Parse the JSON response
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final String role = responseData['role'];
-
-        // Redirect based on role
-        if (role == 'user') {
-          Navigator.pushReplacementNamed(
-              context, '/UserHome'); // Redirect to user home
-        } else if (role == 'admin') {
-          Navigator.pushReplacementNamed(
-              context, '/AdminHome'); // Redirect to admin home
-        }
-      } else {
-        // Handle login error
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Login Error'),
-              content: const Text('Invalid email or password.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } catch (e) {
-      // Handle any network or server errors
-      print('Error: $e');
     }
+  } catch (e) {
+    // Handle any network or server errors
+    print('Error: $e');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
