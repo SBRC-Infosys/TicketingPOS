@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ticketing_system/widgets/rounded_button.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://[2400:1a00:b030:9fa0::2]:5000/api/user/login'),
+        Uri.parse('http://[2400:1a00:b030:5aff::2]:5000/api/user/login'),
         body: {
           'email': email,
           'password': password,
@@ -28,12 +30,20 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response.statusCode == 200) {
-        // Successfully logged in, navigate to the next screen
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacementNamed(context, '/Home'); // Replace '/home' with your desired route
+        // Parse the JSON response
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final String role = responseData['role'];
+
+        // Redirect based on role
+        if (role == 'user') {
+          Navigator.pushReplacementNamed(
+              context, '/UserHome'); // Redirect to user home
+        } else if (role == 'admin') {
+          Navigator.pushReplacementNamed(
+              context, '/AdminHome'); // Redirect to admin home
+        }
       } else {
-        // Handle login error, display an error message to the user
-        // ignore: use_build_context_synchronously
+        // Handle login error
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -102,7 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(bottom: 6),
               child: TextField(
                 controller: _passwordController,
-                obscureText: !_passwordVisible, // Use _passwordVisible to determine text visibility
+                obscureText:
+                    !_passwordVisible, // Use _passwordVisible to determine text visibility
                 decoration: InputDecoration(
                   hintText: "Password",
                   hintStyle: const TextStyle(color: Color(0xff585A60)),
