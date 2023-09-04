@@ -49,6 +49,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
         serviceId: serviceId,
         totalAmount: price,
         departureTime: '',
+        timeDuration: int.parse(timeDuration),
       );
 
       if (newTransactionId != null) {

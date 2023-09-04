@@ -13,13 +13,15 @@ Future<String?> createTransaction({
   required int serviceId,
   required double totalAmount,
   required String departureTime,
-   String? status,
+  String? status,
+  int? timeDuration, // Add the timeDuration parameter
 }) async {
   final Map<String, dynamic> transactionData = {
     'serviceId': serviceId,
     'totalAmount': totalAmount,
     'departureTime': departureTime,
     'status': status,
+    'timeDuration': timeDuration, // Include the timeDuration field
   };
 
   try {
