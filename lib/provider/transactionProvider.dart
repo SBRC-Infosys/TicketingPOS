@@ -13,7 +13,7 @@ Future<String?> createTransaction({
   required int serviceId,
   required double totalAmount,
   required String departureTime,
-  required String status,
+   String? status,
 }) async {
   final Map<String, dynamic> transactionData = {
     'serviceId': serviceId,

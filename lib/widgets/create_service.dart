@@ -58,7 +58,7 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
               TextFormField(
                 readOnly: true,
                 controller: _timeDurationController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Time Duration',
                   border: OutlineInputBorder(),
                 ),
@@ -119,8 +119,10 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
                 price: price,
               );
 
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pop();
 
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Service created successfully'),

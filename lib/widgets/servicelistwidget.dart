@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticketing_system/provider/serviceProvider.dart';
@@ -6,6 +8,7 @@ class ServiceListScreen extends StatefulWidget {
   const ServiceListScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ServiceListScreenState createState() => _ServiceListScreenState();
 }
 
@@ -22,15 +25,20 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
   void _editServiceDialog(BuildContext context, Map<String, dynamic> service) {
     String updatedServiceName = service['serviceName'];
     String updatedDescription = service['description'];
-    String updatedTimeDuration = service['timeDuration'].toString();
-
+    int updatedTimeInMinutes =
+        int.tryParse(service['timeDuration'].toString()) ?? 0;
     String updatedPrice = service['price'];
+
+    TextEditingController _timeDurationController = TextEditingController(
+      text:
+          '${updatedTimeInMinutes ~/ 60} hours, ${updatedTimeInMinutes % 60} minutes',
+    );
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Edit Service'),
+          title: const Text('Edit Service'),
           content: SingleChildScrollView(
             child: Form(
               child: Column(
@@ -65,9 +73,26 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextFormField(
-                      initialValue: updatedTimeDuration,
-                      onChanged: (value) {
-                        updatedTimeDuration = value;
+                      readOnly: true,
+                      controller: _timeDurationController, // Use a controller
+                      onTap: () async {
+                        final selectedTime = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay(
+                            hour: updatedTimeInMinutes ~/ 60,
+                            minute: updatedTimeInMinutes % 60,
+                          ),
+                        );
+
+                        if (selectedTime != null) {
+                          final hours = selectedTime.hour;
+                          final minutes = selectedTime.minute;
+                          setState(() {
+                            updatedTimeInMinutes = (hours * 60) + minutes;
+                            _timeDurationController.text =
+                                '${hours} hours, ${minutes} minutes'; // Update the controller's text
+                          });
+                        }
                       },
                       decoration: const InputDecoration(
                         labelText: 'Time Duration',
@@ -95,34 +120,35 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
           actions: <Widget>[
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); 
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                // Call the editService function with updated data
-                  final serviceProvider =
+          
+                final serviceProvider =
                     Provider.of<ServiceProvider>(context, listen: false);
 
                 serviceProvider
                     .editService(
-                  serviceId: service['id'], // Pass the service ID
+                  serviceId: service['id'], 
                   serviceName: updatedServiceName,
                   description: updatedDescription,
-                  timeDuration: updatedTimeDuration,
+                  timeDuration: updatedTimeInMinutes
+                      .toString(),
                   price: updatedPrice,
                 )
                     .then((_) {
                   serviceProvider
-                      .fetchServices(); // Fetch the updated list of services
+                      .fetchServices(); 
                 }).catchError((error) {
                   // Handle errors here
                   print('Error editing service: $error');
                 });
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
@@ -135,14 +161,14 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this service?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this service?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -158,7 +184,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                 });
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -217,13 +243,13 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                       onPressed: () {
                         _editServiceDialog(context, service);
                       },
-                      child: Text('Edit'),
+                      child: const Text('Edit'),
                     ),
                     TextButton(
                       onPressed: () {
                         _confirmDeleteService(context, service['id']);
                       },
-                      child: Text('Delete'),
+                      child: const Text('Delete'),
                     ),
                   ],
                 ),

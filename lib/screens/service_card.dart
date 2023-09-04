@@ -27,8 +27,6 @@ class _ServiceListPageState extends State<ServiceListPage> {
         serviceId: serviceId,
         totalAmount: price,
         departureTime: '',
-        status:
-            'open', // You can remove this line since you mentioned you want to remove the status.
       );
 
       // If the transaction is successfully created, print the receipt
