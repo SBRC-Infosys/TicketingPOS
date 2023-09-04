@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:ticketing_system/components/bottom_bar.dart';
 import 'package:ticketing_system/provider/companyProvider.dart';
 import 'package:ticketing_system/provider/serviceProvider.dart';
 import 'package:ticketing_system/screens/company.dart';
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         "/": (context) => const LoginScreen(),
-        "/UserHome": (context) => const HomePage(),
+        "/UserHome": (context) => const BottomBar(),
         "/AdminHome": (context) => const CreateServiceScreen(),
         // Add your other routes here...
       },

@@ -105,7 +105,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Service List')),
+   
       body: FutureBuilder(
         future: serviceProvider.fetchServices(),
         builder: (context, snapshot) {
