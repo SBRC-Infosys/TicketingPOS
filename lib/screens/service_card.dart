@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_system/provider/companyProvider.dart';
 import 'package:ticketing_system/provider/serviceProvider.dart';
 import 'package:ticketing_system/provider/transactionProvider.dart';
 import 'package:ticketing_system/widgets/print.dart';
@@ -7,22 +8,42 @@ class ServiceListPage extends StatefulWidget {
   const ServiceListPage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _ServiceListPageState createState() => _ServiceListPageState();
 }
 
 class _ServiceListPageState extends State<ServiceListPage> {
   final serviceProvider = ServiceProvider();
   final transactionProvider = TransactionProvider();
+  final companyProvider = CompanyProvider();
 
   @override
   void initState() {
     super.initState();
     serviceProvider.fetchServices();
+    companyProvider.fetchCompanies();
   }
 
-  Future<void> createTransactionAndPrintReceipt(int serviceId, double price,
-      String serviceName, String timeDuration) async {
+  String formatTimeDuration(int minutes) {
+    if (minutes >= 60) {
+      int hours = minutes ~/ 60;
+      int remainingMinutes = minutes % 60;
+
+      if (remainingMinutes == 0) {
+        return '$hours hour${hours > 1 ? 's' : ''}';
+      } else {
+        return '$hours hour${hours > 1 ? 's' : ''}, $remainingMinutes minute${remainingMinutes > 1 ? 's' : ''}';
+      }
+    } else {
+      return '$minutes minute${minutes > 1 ? 's' : ''}';
+    }
+  }
+
+  Future<void> createTransactionAndPrintReceipt(
+    int serviceId,
+    double price,
+    String serviceName,
+    String timeDuration,
+  ) async {
     try {
       final newTransactionId = await transactionProvider.createTransaction(
         serviceId: serviceId,
@@ -33,13 +54,46 @@ class _ServiceListPageState extends State<ServiceListPage> {
       if (newTransactionId != null) {
         Sunmi printer = Sunmi();
         await printer.initialize();
+
+        // Header: Ticket Summary
+        await printer.printText('Ticket Summary');
+
+        // Company Name
+        final companies = companyProvider.companies;
+        if (companies.isNotEmpty) {
+          final companyData = companies[0];
+          final companyName = companyData['companyName'];
+          await printer.printText(companyName);
+        }
+
+        // Company Address
+        if (companies.isNotEmpty) {
+          final companyData = companies[0];
+          final companyAddress = companyData['companyAddress'];
+          await printer.printText(companyAddress);
+        }
+
+        // Service Name
         await printer.printText(
-            'Service: $serviceName'); 
+          'Service: $serviceName',
+        );
+
+        // QR Code (larger size)
+        await printer.printQRCode(
+          newTransactionId,
+        ); // Replace with your preferred size
+
+        // Time Duration and Price
+        await printer.printText(
+            'Time Duration: ${formatTimeDuration(int.parse(timeDuration))}');
         await printer.printText('Price: Rs $price');
-        await printer
-            .printText('Time Duration: $timeDuration'); 
-        await printer
-            .printQRCode(newTransactionId); 
+
+        // Entry Time (Random Date)
+        await printer.printText('Entry Time: ${DateTime.now()}');
+
+        // Footer: Happy Playing
+        await printer.printText('*** Happy Playing ***');
+
         await printer.closePrinter();
       }
     } catch (error) {
@@ -50,9 +104,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Service List'),
-      ),
+      appBar: AppBar(title: const Text('Service List')),
       body: FutureBuilder(
         future: serviceProvider.fetchServices(),
         builder: (context, snapshot) {
@@ -81,8 +133,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                         serviceId,
                         price,
                         serviceName,
-                        timeDuration
-                            .toString(), // Convert the integer to a string
+                        timeDuration.toString(),
                       );
                     },
                     child: ListTile(
@@ -114,7 +165,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                             ),
                           ),
                           Text(
-                            'Time Duration: $timeDuration',
+                            'Time Duration: ${formatTimeDuration(timeDuration)}',
                             style: const TextStyle(
                               fontSize: 14.0,
                             ),
