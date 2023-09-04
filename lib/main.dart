@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) => const CreateServiceScreen(),
+        "/": (context) => const ServiceListPage(),
         // Add your other routes here...
       },
     );

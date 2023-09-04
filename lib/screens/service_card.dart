@@ -7,6 +7,7 @@ class ServiceListPage extends StatefulWidget {
   const ServiceListPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ServiceListPageState createState() => _ServiceListPageState();
 }
 
@@ -29,18 +30,16 @@ class _ServiceListPageState extends State<ServiceListPage> {
         departureTime: '',
       );
 
-      // If the transaction is successfully created, print the receipt
       if (newTransactionId != null) {
         Sunmi printer = Sunmi();
         await printer.initialize();
-        await printer.printText('Transaction ID: $newTransactionId');
         await printer.printText(
-            'Service: $serviceName'); // Use the selected service name
+            'Service: $serviceName'); 
         await printer.printText('Price: Rs $price');
         await printer
-            .printText('Time Duration: $timeDuration'); // Use the time duration
+            .printText('Time Duration: $timeDuration'); 
         await printer
-            .printQRCode(newTransactionId); // Print transaction ID as QR code
+            .printQRCode(newTransactionId); 
         await printer.closePrinter();
       }
     } catch (error) {
