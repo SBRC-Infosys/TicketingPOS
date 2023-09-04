@@ -15,6 +15,7 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _timeDurationController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  int selectedTimeInMinutes = 0; // Store the selected time in minutes
 
   @override
   Widget build(BuildContext context) {
@@ -55,16 +56,27 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                readOnly: true,
                 controller: _timeDurationController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Time Duration',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a time duration';
+                onTap: () async {
+                  final selectedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+
+                  if (selectedTime != null) {
+                    final hours = selectedTime.hour;
+                    final minutes = selectedTime.minute;
+                    setState(() {
+                      selectedTimeInMinutes = (hours * 60) + minutes;
+                      _timeDurationController.text =
+                          '$hours hours, $minutes minutes';
+                    });
                   }
-                  return null;
                 },
               ),
               const SizedBox(height: 16),
@@ -97,13 +109,13 @@ class _CreateServiceDialogState extends State<CreateServiceDialog> {
             if (_formKey.currentState!.validate()) {
               final serviceName = _serviceNameController.text;
               final description = _descriptionController.text;
-              final timeDuration = _timeDurationController.text;
               final price = _priceController.text;
 
               await ServiceProvider().createService(
                 serviceName: serviceName,
                 description: description,
-                timeDuration: timeDuration,
+                timeDuration:
+                    selectedTimeInMinutes.toString(), // Pass as a string
                 price: price,
               );
 
