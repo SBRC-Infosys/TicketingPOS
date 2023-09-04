@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:ticketing_system/provider/companyProvider.dart';
 
 import 'package:ticketing_system/provider/serviceProvider.dart';
+import 'package:ticketing_system/screens/company.dart';
 
 import 'package:ticketing_system/screens/first_sceen.dart';
 import 'package:ticketing_system/screens/home_page.dart';
@@ -22,6 +24,7 @@ void main() {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ServiceProvider()),
+          ChangeNotifierProvider(create: (context) => CompanyProvider()),
         ],
         child: const MyApp(),
       ),
