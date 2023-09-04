@@ -10,6 +10,7 @@ import 'package:ticketing_system/screens/login_screen.dart';
 
 import 'package:ticketing_system/screens/service.dart';
 import 'package:ticketing_system/screens/service_card.dart';
+import 'package:ticketing_system/widgets/qr_code_widget.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/": (context) =>  ServiceListPage(),
+        "/": (context) => const QRCodeWidget(),
         // Add your other routes here...
       },
     );
