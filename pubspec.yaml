@@ -25,6 +25,7 @@ dependencies:
   qr_flutter: ^4.1.0
   sunmi_printer_plus: ^2.1.01
   shared_preferences: ^2.0.8
+  babstrap_settings_screen: ^0.1.6
 
 dev_dependencies:
   flutter_test:
