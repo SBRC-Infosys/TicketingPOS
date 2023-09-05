@@ -152,7 +152,7 @@ class TransactionList extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Amount: \$${transaction['totalAmount']}',
+                                      'Amount: \Rs ${transaction['totalAmount']}',
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                     Text(

@@ -230,7 +230,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Price: \$${service['price']}',
+                        'Price: \Rs ${service['price']}',
                         style: const TextStyle(fontSize: 16),
                       ),
                     ],
