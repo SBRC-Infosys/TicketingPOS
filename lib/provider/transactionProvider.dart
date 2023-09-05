@@ -79,6 +79,20 @@ class TransactionProvider with ChangeNotifier {
     }
   }
 
+   Future<void> deleteTransaction(int transactionId) async {
+    try {
+      final response = await _deleteRequest('$baseUrl/$transactionId');
+
+      if (response.statusCode == 200) {
+        notifyListeners();
+      } else {
+        throw Exception('Failed to delete transaction');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
 
 
@@ -92,6 +106,12 @@ class TransactionProvider with ChangeNotifier {
     );
   }
 
+  Future<http.Response> _deleteRequest(String url) async {
+    return await http.delete(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
 
   Future<http.Response> _putRequest(String url,
       {required Map<String, dynamic> body}) async {

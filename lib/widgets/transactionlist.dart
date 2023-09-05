@@ -68,6 +68,43 @@ class TransactionList extends StatelessWidget {
       );
     }
 
+     Future<void> _showDeleteConfirmationDialog(int transactionId) async {
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Confirm Delete'),
+            content: Text('Are you sure you want to delete this transaction?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  try {
+                    await transactionProvider.deleteTransaction(transactionId);
+                    Navigator.of(context).pop(); // Close the dialog
+                  } catch (error) {
+                    // Handle error
+                    Navigator.of(context).pop(); // Close the dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to delete transaction: $error'),
+                      ),
+                    );
+                  }
+                },
+                child: Text('Delete'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -140,7 +177,7 @@ class TransactionList extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // Add your delete transaction logic here
+                                  _showDeleteConfirmationDialog(transactionId);
                                 },
                                 child: const Text('Delete'),
                               ),
