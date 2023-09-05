@@ -13,7 +13,6 @@ class Sunmi {
 
 
   Future<void> printText(String text) async {
-    await SunmiPrinter.lineWrap(-1);
     await SunmiPrinter.printText(
       text,
       style: SunmiStyle(
@@ -23,7 +22,6 @@ class Sunmi {
         
       ),
     );
-    await SunmiPrinter.lineWrap(2);
   }
 
 

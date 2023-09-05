@@ -24,18 +24,18 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Check if the user is logged in
-  final prefs = await SharedPreferences.getInstance();
-  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  final userRole = prefs.getString('userRole');
+  // // Check if the user is logged in
+  // final prefs = await SharedPreferences.getInstance();
+  // final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  // final userRole = prefs.getString('userRole');
 
-  if (isLoggedIn) {
-    if (userRole == 'user') {
-      initialRoute = '/UserHome';
-    } else if (userRole == 'admin') {
-      initialRoute = '/AdminHome';
-    }
-  }
+  // if (isLoggedIn) {
+  //   if (userRole == 'user') {
+  //     initialRoute = '/UserHome';
+  //   } else if (userRole == 'admin') {
+  //     initialRoute = '/AdminHome';
+  //   }
+  // }
 
   runApp(
     MultiProvider(
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const LoginScreen(),
         "/UserHome": (context) => const Bar(),
-        "/AdminHome": (context) =>  const BottomBar(),
+        "/AdminHome": (context) =>  BottomBar(),
         // Add your other routes here...
       },
     );
