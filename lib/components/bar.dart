@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ticketing_system/screens/company.dart';
 import 'package:ticketing_system/screens/home_page.dart';
-import 'package:ticketing_system/screens/service.dart';
-import 'package:ticketing_system/screens/transaction.dart';
 import 'package:ticketing_system/style/app_style.dart';
 import 'package:ticketing_system/widgets/qr_code_widget.dart';
 
-class BottomBar extends StatefulWidget {
-  const BottomBar({super.key});
+class Bar extends StatefulWidget {
+  const Bar({super.key});
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<Bar> createState() => _BarState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _BarState extends State<Bar> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
     QRScannerHomePage(),
-    QRCodeWidget(),
-    CreateServiceScreen(),
-    CreateCompanyScreen(),
     QRCodeWidget(),
   ];
 
@@ -61,39 +55,6 @@ class _BottomBarState extends State<BottomBar> {
             ),
             icon: SvgPicture.asset(AppStyle.eventIcon),
             label: 'Camera',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: SvgPicture.asset(
-              AppStyle.reportIcon,
-              colorFilter: const ColorFilter.mode(
-                AppStyle.primarySwatch,
-                BlendMode.srcIn,
-              ),
-            ),
-            icon: SvgPicture.asset(AppStyle.reportIcon),
-            label: 'Services',
-          ),
-          BottomNavigationBarItem(
-            activeIcon: SvgPicture.asset(
-              AppStyle.notificationsIcon,
-              colorFilter: const ColorFilter.mode(
-                AppStyle.primarySwatch,
-                BlendMode.srcIn,
-              ),
-            ),
-            icon: SvgPicture.asset(AppStyle.notificationsIcon),
-            label: 'Company',
-          ),
-            BottomNavigationBarItem(
-            activeIcon: SvgPicture.asset(
-              AppStyle.notificationsIcon,
-              colorFilter: const ColorFilter.mode(
-                AppStyle.primarySwatch,
-                BlendMode.srcIn,
-              ),
-            ),
-            icon: SvgPicture.asset(AppStyle.notificationsIcon),
-            label: 'Report',
           ),
         ],
         currentIndex: _selectedIndex,

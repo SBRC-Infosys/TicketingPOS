@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:ticketing_system/components/bar.dart';
 import 'package:ticketing_system/components/bottom_bar.dart';
 import 'package:ticketing_system/provider/companyProvider.dart';
 import 'package:ticketing_system/provider/serviceProvider.dart';
+import 'package:ticketing_system/provider/transactionProvider.dart';
 import 'package:ticketing_system/screens/company.dart';
 import 'package:ticketing_system/screens/home_page.dart';
 import 'package:ticketing_system/screens/login_screen.dart';
@@ -11,6 +13,7 @@ import 'package:ticketing_system/screens/service.dart';
 import 'package:ticketing_system/screens/service_card.dart';
 import 'package:ticketing_system/widgets/qr_code_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ticketing_system/widgets/transactionlist.dart';
 
 String initialRoute = '/'; // Default value in case of no login or unknown role
 
@@ -39,6 +42,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ServiceProvider()),
         ChangeNotifierProvider(create: (context) => CompanyProvider()),
+        ChangeNotifierProvider(create: (context) => TransactionProvider()),
       ],
       child: MyApp(initialRoute: initialRoute),
     ),
@@ -62,8 +66,8 @@ class MyApp extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         "/": (context) => const LoginScreen(),
-        "/UserHome": (context) => const BottomBar(),
-        "/AdminHome": (context) => const CreateServiceScreen(),
+        "/UserHome": (context) => const Bar(),
+        "/AdminHome": (context) =>  TransactionListPage(),
         // Add your other routes here...
       },
     );
