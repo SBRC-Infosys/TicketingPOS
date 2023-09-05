@@ -32,29 +32,3 @@ class QRScannerHomePage extends StatelessWidget {
   }
 }
 
-// Center(
-//         child: Column(
-//           children: [
-//             const SizedBox(height: 40),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.end,
-//               children: [
-//                 GestureDetector(
-//                   onTap: () {
-//                     Navigator.push(
-//                         context,
-//                         MaterialPageRoute(
-//                             builder: (context) => const QRCodeWidget()));
-//                   },
-//                   child: const Icon(
-//                     Icons.qr_code_scanner,
-//                     size: 60,
-//                     color: Colors.black,
-//                   ),
-//                 ),
-//                 const SizedBox(width: 20),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),

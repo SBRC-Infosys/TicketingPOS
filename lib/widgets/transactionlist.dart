@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ticketing_system/provider/transactionProvider.dart';
 
 class TransactionListPage extends StatelessWidget {
+  const TransactionListPage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +69,7 @@ class TransactionList extends StatelessWidget {
       );
     }
 
-     Future<void> _showDeleteConfirmationDialog(int transactionId) async {
+    Future<void> _showDeleteConfirmationDialog(int transactionId) async {
       await showDialog(
         context: context,
         builder: (context) {
@@ -105,94 +106,101 @@ class TransactionList extends StatelessWidget {
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          FutureBuilder<List<dynamic>>(
-            future: transactionProvider.fetchTransactions(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                // Display the list of transactions
-                final transactions = snapshot.data!;
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) {
-                    final transaction = transactions[index];
-                    final transactionId = transaction['id'];
-                    return Card(
-                      elevation: 3,
-                      margin: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListTile(
-                            leading: const Icon(Icons.attach_money,
-                                size: 32), // Use an icon
-                            title: Text(
-                              'Transaction ID: ${transaction['id']}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Amount: \$${transaction['totalAmount']}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                Text(
-                                  'Departure Time: ${transaction['departureTime']}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                Text(
-                                  'Status: ${transaction['status']}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                Text(
-                                  'Time Duration: ${transaction['timeDuration']}',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ButtonBar(
-                            alignment: MainAxisAlignment.end,
+  return ListView(
+      physics: AlwaysScrollableScrollPhysics(),
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              FutureBuilder<List<dynamic>>(
+                future: transactionProvider.fetchTransactions(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    // Display the list of transactions
+                    final transactions = snapshot.data!;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(), // Disable inner scrolling
+                      itemCount: transactions.length,
+                      itemBuilder: (context, index) {
+                        final transaction = transactions[index];
+                        final transactionId = transaction['id'];
+                        return Card(
+                          elevation: 3,
+                          margin: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextButton(
-                                onPressed: () {
-                                  // Call the _showEditStatusDialog function when the "Edit" button is pressed
-                                  _showEditStatusDialog(transactionId);
-                                },
-                                child: const Text('Edit'),
+                              ListTile(
+                                leading: const Icon(Icons.attach_money,
+                                    size: 32), // Use an icon
+                                title: Text(
+                                  'Transaction ID: ${transaction['id']}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Amount: \$${transaction['totalAmount']}',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      'Departure Time: ${transaction['departureTime']}',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      'Status: ${transaction['status']}',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    Text(
+                                      'Time Duration: ${transaction['timeDuration']}',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  _showDeleteConfirmationDialog(transactionId);
-                                },
-                                child: const Text('Delete'),
+                              ButtonBar(
+                                alignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      // Call the _showEditStatusDialog function when the "Edit" button is pressed
+                                      _showEditStatusDialog(transactionId);
+                                    },
+                                    child: const Text('Edit'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      _showDeleteConfirmationDialog(
+                                          transactionId);
+                                    },
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     );
-                  },
-                );
-              }
-            },
+                  }
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

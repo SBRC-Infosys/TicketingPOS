@@ -15,6 +15,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
   final serviceProvider = ServiceProvider();
   final transactionProvider = TransactionProvider();
   final companyProvider = CompanyProvider();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -37,6 +38,14 @@ class _ServiceListPageState extends State<ServiceListPage> {
       return '$minutes minute${minutes > 1 ? 's' : ''}';
     }
   }
+ void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2), // Adjust the duration as needed
+      ),
+    );
+  }
 
   Future<void> createTransactionAndPrintReceipt(
     int serviceId,
@@ -50,6 +59,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
         totalAmount: price,
         departureTime: '',
         timeDuration: int.parse(timeDuration),
+        status: 'open',
       );
 
       if (newTransactionId != null) {
@@ -96,16 +106,16 @@ class _ServiceListPageState extends State<ServiceListPage> {
         await printer.printText('*** Happy Playing ***');
 
         await printer.closePrinter();
+           // Show a SnackBar with the message
+          showSnackBar('Bill printed and transaction created');
       }
     } catch (error) {
       print('Error creating transaction or printing receipt: $error');
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-   
       body: FutureBuilder(
         future: serviceProvider.fetchServices(),
         builder: (context, snapshot) {

@@ -6,6 +6,7 @@ import 'package:ticketing_system/screens/service.dart';
 import 'package:ticketing_system/screens/transaction.dart';
 import 'package:ticketing_system/style/app_style.dart';
 import 'package:ticketing_system/widgets/qr_code_widget.dart';
+import 'package:ticketing_system/widgets/transactionlist.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -22,7 +23,7 @@ class _BottomBarState extends State<BottomBar> {
     QRCodeWidget(),
     CreateServiceScreen(),
     CreateCompanyScreen(),
-    QRCodeWidget(),
+    TransactionListPage(),
   ];
 
   void _onItemTapped(int index) {

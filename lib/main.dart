@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const LoginScreen(),
         "/UserHome": (context) => const Bar(),
-        "/AdminHome": (context) =>  TransactionListPage(),
+        "/AdminHome": (context) =>  const BottomBar(),
         // Add your other routes here...
       },
     );
