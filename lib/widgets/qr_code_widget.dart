@@ -1,9 +1,13 @@
+
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
 
 class QRCodeWidget extends StatefulWidget {
-  const QRCodeWidget({super.key});
+  const QRCodeWidget({Key? key});
 
   @override
   State<QRCodeWidget> createState() => _QRCodeWidgetState();
@@ -46,12 +50,15 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       );
 
       if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        final totalAmount = responseBody['totalAmount'];
+
         print('Transaction status updated successfully');
         setState(() {
           showSuccessMessage = true;
           transactionDetails = {
             'transactionId': transactionId,
-            // Add more fields here if needed
+            'totalAmount': totalAmount, // Include totalAmount in transactionDetails
           };
         });
       } else {
@@ -91,13 +98,14 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
               child: Column(
                 children: [
                   Text(
-                    showSuccessMessage ? "Transaction Updated!" : "Scan Result: $result",
+                    showSuccessMessage ? "Token Closed!" : "Scan Result: $result",
                     style: const TextStyle(fontSize: 18),
                   ),
                   if (transactionDetails != null)
                     Column(
                       children: [
                         Text("Transaction ID: ${transactionDetails!['transactionId']}"),
+                        Text("Total Amount: \$${transactionDetails!['totalAmount']}"), // Display total amount here
                         // Display more transaction details here
                       ],
                     ),
