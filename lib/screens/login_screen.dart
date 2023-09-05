@@ -42,12 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Redirect based on role
       if (role == 'user') {
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/UserHome');
       } else if (role == 'admin') {
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/AdminHome');
       }
     } else {
       // Handle login error
+      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (BuildContext context) {

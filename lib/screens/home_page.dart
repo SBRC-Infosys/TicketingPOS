@@ -9,26 +9,25 @@ class QRScannerHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("QR Scanner"),
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: "logout",
-                child: Text("Logout"),
-              ),
-            ],
-            onSelected: (value) {
-              if (value == "logout") {
-                // Handle logout
-              }
-            },
-          ),
-        ],
-      ),
-      body: const ServiceListPage()
-    );
+        appBar: AppBar(
+          title: const Text("QR Scanner"),
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: "logout",
+                  child: Text("Logout"),
+                ),
+              ],
+              onSelected: (value) {
+                if (value == "logout") {
+                  // Navigate to the logout screen
+                  Navigator.pushNamed(context, '/');
+                }
+              },
+            ),
+          ],
+        ),
+        body: const ServiceListPage());
   }
 }
-
