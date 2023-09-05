@@ -7,6 +7,7 @@ import 'package:ticketing_system/provider/companyProvider.dart';
 import 'package:ticketing_system/provider/serviceProvider.dart';
 import 'package:ticketing_system/provider/transactionProvider.dart';
 import 'package:ticketing_system/screens/company.dart';
+import 'package:ticketing_system/screens/first_sceen.dart';
 import 'package:ticketing_system/screens/home_page.dart';
 import 'package:ticketing_system/screens/login_screen.dart';
 import 'package:ticketing_system/screens/service.dart';
@@ -24,18 +25,18 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // // Check if the user is logged in
-  // final prefs = await SharedPreferences.getInstance();
-  // final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  // final userRole = prefs.getString('userRole');
+  // Check if the user is logged in
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  final userRole = prefs.getString('userRole');
 
-  // if (isLoggedIn) {
-  //   if (userRole == 'user') {
-  //     initialRoute = '/UserHome';
-  //   } else if (userRole == 'admin') {
-  //     initialRoute = '/AdminHome';
-  //   }
-  // }
+  if (isLoggedIn) {
+    if (userRole == 'user') {
+      initialRoute = '/UserHome';
+    } else if (userRole == 'admin') {
+      initialRoute = '/AdminHome';
+    }
+  }
 
   runApp(
     MultiProvider(
@@ -65,9 +66,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: initialRoute,
       routes: {
-        "/": (context) => const LoginScreen(),
+        "/": (context) => const FirstScreen(),
         "/UserHome": (context) => const Bar(),
-        "/AdminHome": (context) =>  BottomBar(),
+        "/AdminHome": (context) =>  const BottomBar(),
         // Add your other routes here...
       },
     );
