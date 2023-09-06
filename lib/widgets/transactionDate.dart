@@ -29,7 +29,6 @@ class _TransactionListState extends State<TransactionList> {
     return formattedDateTime;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final transactionProvider = Provider.of<TransactionProvider>(context);
@@ -61,6 +60,7 @@ class _TransactionListState extends State<TransactionList> {
                     labelText: 'Select Status',
                     border: const OutlineInputBorder(),
                     filled: true,
+                    fillColor: Colors.grey[700],
                   ),
                   style: const TextStyle(
                     color: Colors.black,
@@ -136,53 +136,51 @@ class _TransactionListState extends State<TransactionList> {
       );
     }
 
-      return ListView(
+    return ListView(
       physics: AlwaysScrollableScrollPhysics(),
       children: [
-        Card(
-          elevation: 3,
-          margin: const EdgeInsets.all(16),
+        Container(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    // Add a dropdown for status
-                    DropdownButtonFormField<String>(
-                      value: status,
-                      items: ['open', 'closed'].map((status) {
-                        return DropdownMenuItem<String>(
-                          value: status,
-                          child: Text(status),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          status = value;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Select Status',
-                        border: const OutlineInputBorder(),
-                        filled: true,
-            
-                      ),
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 10),
+              // Add TextFormFields for filter criteria (e.g., startDate, endDate, month, year, status)
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Start Date'),
+                onChanged: (value) {
+                  setState(() {
+                    startDate = value;
+                  });
+                },
               ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'End Date'),
+                onChanged: (value) {
+                  setState(() {
+                    endDate = value;
+                  });
+                },
+              ),
+
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Status'),
+                onChanged: (value) {
+                  setState(() {
+                    status = value;
+                  });
+                },
+              ),
+        
             ],
           ),
         ),
         FutureBuilder<List<dynamic>>(
-          future: transactionProvider.fetchTransactions(status: status),
+          future: transactionProvider.fetchTransactions(
+            startDate: startDate,
+            endDate: endDate,
+            status: status,
+          ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();

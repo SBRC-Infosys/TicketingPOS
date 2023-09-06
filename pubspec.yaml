@@ -26,6 +26,7 @@ dependencies:
   sunmi_printer_plus: ^2.1.01
   shared_preferences: ^2.0.8
   babstrap_settings_screen: ^0.1.6
+  flutter_cupertino_date_picker_fork: ^1.0.7
 
 dev_dependencies:
   flutter_test:

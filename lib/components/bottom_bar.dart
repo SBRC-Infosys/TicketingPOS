@@ -4,6 +4,7 @@ import 'package:ticketing_system/screens/company.dart';
 import 'package:ticketing_system/screens/home_page.dart';
 import 'package:ticketing_system/screens/service.dart';
 import 'package:ticketing_system/screens/transaction.dart';
+import 'package:ticketing_system/screens/transactionPage.dart';
 import 'package:ticketing_system/style/app_style.dart';
 import 'package:ticketing_system/widgets/qr_code_widget.dart';
 import 'package:ticketing_system/widgets/transactionlist.dart';

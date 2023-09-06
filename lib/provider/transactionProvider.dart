@@ -43,21 +43,56 @@ static const String baseUrl =
   }
 
   // Fetch transactions from the API
-  Future<List<dynamic>> fetchTransactions() async {
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/fetch'));
+Future<List<dynamic>> fetchTransactions({
+  String? startDate,
+  String? endDate,
+  int? month,
+  int? year,
+  String? status,
+}) async {
+  try {
+    // Create a map to store the filter parameters
+    final Map<String, dynamic> queryParams = {};
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final transactions = data['transactions'];
-        return transactions;
-      } else {
-        throw Exception('Failed to fetch transactions');
-      }
-    } catch (error) {
-      throw error;
+    // Add filter parameters to the queryParams map if they are provided
+    if (startDate != null) {
+      queryParams['startDate'] = startDate;
     }
+
+    if (endDate != null) {
+      queryParams['endDate'] = endDate;
+    }
+
+    if (month != null) {
+      queryParams['month'] = month.toString();
+    }
+
+    if (year != null) {
+      queryParams['year'] = year.toString();
+    }
+
+    if (status != null) {
+      queryParams['status'] = status;
+    }
+
+    // Construct the URL with query parameters
+    final Uri url = Uri.parse('$baseUrl/fetch').replace(queryParameters: queryParams);
+
+    // Make the HTTP GET request
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final transactions = data['transactions'];
+      return transactions;
+    } else {
+      throw Exception('Failed to fetch transactions');
+    }
+  } catch (error) {
+    throw error;
   }
+}
+
 
     Future<void> editTransactionStatus({
     required int transactionId,
