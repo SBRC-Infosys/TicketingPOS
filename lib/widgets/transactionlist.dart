@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ticketing_system/provider/transactionProvider.dart';
+import 'package:intl/intl.dart';
+
 
 class TransactionListPage extends StatelessWidget {
   const TransactionListPage({super.key});
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +23,24 @@ class TransactionListPage extends StatelessWidget {
 class TransactionList extends StatelessWidget {
   const TransactionList({super.key});
 
+  String _formatDateTime(String? dateTimeString) {
+  if (dateTimeString == null) {
+    return 'N/A'; // You can provide a default value or message
+  }
+  final parsedDateTime = DateTime.tryParse(dateTimeString);
+  if (parsedDateTime == null) {
+    return 'Invalid Date'; // Handle the case where parsing fails
+  }
+  final formattedDateTime =
+      DateFormat.yMd().add_jms().format(parsedDateTime);
+  return formattedDateTime;
+}
+
+
   @override
   Widget build(BuildContext context) {
     final transactionProvider = Provider.of<TransactionProvider>(context);
+    
 
     // ignore: no_leading_underscores_for_local_identifiers
     Future<void> _showEditStatusDialog(int transactionId) async {
@@ -137,7 +157,7 @@ class TransactionList extends StatelessWidget {
       );
     }
 
-    return ListView(
+   return ListView(
       physics: AlwaysScrollableScrollPhysics(),
       children: [
         Container(
@@ -158,8 +178,7 @@ class TransactionList extends StatelessWidget {
                     final transactions = snapshot.data!;
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Disable inner scrolling
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: transactions.length,
                       itemBuilder: (context, index) {
                         final transaction = transactions[index];
@@ -172,7 +191,7 @@ class TransactionList extends StatelessWidget {
                             children: [
                               ListTile(
                                 leading: const Icon(Icons.attach_money,
-                                    size: 32), // Use an icon
+                                    size: 32),
                                 title: Text(
                                   'Transaction ID: ${transaction['id']}',
                                   style: const TextStyle(
@@ -188,7 +207,7 @@ class TransactionList extends StatelessWidget {
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                     Text(
-                                      'Departure Time: ${transaction['departureTime']}',
+                                      'Departure Time: ${_formatDateTime(transaction['departureTime'])}',
                                       style: const TextStyle(fontSize: 16),
                                     ),
                                     Text(
@@ -207,7 +226,6 @@ class TransactionList extends StatelessWidget {
                                 children: [
                                   TextButton(
                                     onPressed: () {
-                                      // Call the _showEditStatusDialog function when the "Edit" button is pressed
                                       _showEditStatusDialog(transactionId);
                                     },
                                     child: const Text('Edit'),
