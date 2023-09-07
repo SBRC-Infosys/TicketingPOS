@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:ticketing_system/screens/company.dart';
+import 'package:ticketing_system/screens/print_excel_page.dart';
 import 'package:ticketing_system/screens/register_screen.dart';
 import 'package:ticketing_system/screens/service.dart';
 
@@ -26,107 +27,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        elevation: 0,
+        elevation: 10,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: ListView(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 18.0, top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Stack(
-                          children: [
-                            // ignore: avoid_unnecessary_containers
-                            Container(
-                              child: const CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/logo.png'),
-                                radius: 42,
-                                backgroundColor:
-                                    Color.fromARGB(255, 187, 186, 186),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              "Ajay",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 22,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255),
-                                ),
-                                child: const Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 8.0, right: 8, top: 2, bottom: 2),
-                                  child: Text(
-                                    "+977 9876134578",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
             SettingsGroup(
               items: [
                 SettingsItem(
-                  onTap: () {},
-                  icons: Icons.fingerprint,
-                  iconStyle: IconStyle(
-                    iconsColor: Colors.white,
-                    withBackground: true,
-                    backgroundColor: Colors.black,
-                  ),
-                  title: 'Edit Profile',
-                  subtitle: "Change user details",
-                ),
-              ],
-            ),
-            SettingsGroup(
-              items: [
-                SettingsItem(
-                   onTap: () {
+                  onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>  RegisterScreen(),
+                        builder: (context) => const RegisterScreen(),
                       ),
                     );
                   },
@@ -150,6 +63,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: 'Language',
                   subtitle: "English",
                 ),
+              ],
+            ),
+            SettingsGroup(
+              items: [
                 SettingsItem(
                   onTap: () {
                     Navigator.of(context).push(
@@ -158,14 +75,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     );
                   },
-                  icons: Icons.book,
+                  icons: Icons.local_offer,
                   iconStyle: IconStyle(
                     iconsColor: Colors.white,
                     withBackground: true,
                     backgroundColor: Colors.black,
                   ),
                   title: 'Services',
-                  subtitle: "Add new serviecs",
+                  subtitle: "Add new services",
                 ),
                 SettingsItem(
                   onTap: () {
@@ -175,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     );
                   },
-                  icons: Icons.book,
+                  icons: Icons.business,
                   iconStyle: IconStyle(
                     iconsColor: Colors.white,
                     withBackground: true,
@@ -184,9 +101,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: 'Company',
                   subtitle: "Add company",
                 ),
+                SettingsItem(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PrintExcelPage(),
+                      ),
+                    );
+                  },
+                  icons: Icons.file_download,
+                  iconStyle: IconStyle(
+                    iconsColor: Colors.white,
+                    withBackground: true,
+                    backgroundColor: Colors.black,
+                  ),
+                  title: 'Download Data',
+                  subtitle: "Download transaction data in excel file",
+                ),
               ],
             ),
-            // You can add a settings title
             SettingsGroup(
               settingsGroupTitle: "Account",
               items: [
@@ -194,11 +127,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {},
                   icons: Icons.exit_to_app_rounded,
                   title: "Sign Out",
-                ),
-                SettingsItem(
-                  onTap: () {},
-                  icons: Icons.repeat,
-                  title: "Change password",
                 ),
               ],
             ),
