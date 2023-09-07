@@ -46,8 +46,6 @@ static const String baseUrl =
 Future<List<dynamic>> fetchTransactions({
   String? startDate,
   String? endDate,
-  int? month,
-  int? year,
   String? status,
 }) async {
   try {
@@ -63,13 +61,6 @@ Future<List<dynamic>> fetchTransactions({
       queryParams['endDate'] = endDate;
     }
 
-    if (month != null) {
-      queryParams['month'] = month.toString();
-    }
-
-    if (year != null) {
-      queryParams['year'] = year.toString();
-    }
 
     if (status != null) {
       queryParams['status'] = status;

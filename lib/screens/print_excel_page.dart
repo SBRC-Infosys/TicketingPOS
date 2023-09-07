@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -8,7 +6,7 @@ import 'package:ticketing_system/provider/serviceProvider.dart';
 import 'package:ticketing_system/provider/transactionProvider.dart';
 
 class PrintExcelPage extends StatefulWidget {
-  const PrintExcelPage({super.key});
+  const PrintExcelPage({Key? key}) : super(key: key);
 
   @override
   _PrintExcelPageState createState() => _PrintExcelPageState();
@@ -17,6 +15,15 @@ class PrintExcelPage extends StatefulWidget {
 class _PrintExcelPageState extends State<PrintExcelPage> {
   final transactionProvider = TransactionProvider();
   TextEditingController fileNameController = TextEditingController();
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController();
+  String? selectedStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedStatus = 'Open'; // Default status value
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +37,54 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
           children: [
             ElevatedButton(
               onPressed: () {
-                _fetchAndSaveTransactionsAsExcel();
+                _fetchAndSaveTransactionsAsExcel(
+                  startDate: startDateController.text,
+                  endDate: endDateController.text,
+                  status: selectedStatus,
+                );
               },
               child: const Text('Fetch and Save as Excel'),
             ),
+            const SizedBox(height: 20),
             TextField(
               controller: fileNameController,
               decoration: const InputDecoration(
                 labelText: 'Enter File Name',
               ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: startDateController,
+              readOnly: true,
+              onTap: () => _selectDate(context, startDateController),
+              decoration: const InputDecoration(
+                labelText: 'Start Date',
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: endDateController,
+              readOnly: true,
+              onTap: () => _selectDate(context, endDateController),
+              decoration: const InputDecoration(
+                labelText: 'End Date',
+              ),
+            ),
+            const SizedBox(height: 20),
+            DropdownButton<String>(
+              value: selectedStatus,
+              onChanged: (value) {
+                setState(() {
+                  selectedStatus = value;
+                });
+              },
+              items: ['Open', 'Closed'].map((status) {
+                return DropdownMenuItem<String>(
+                  value: status,
+                  child: Text(status),
+                );
+              }).toList(),
+              hint: const Text('Select Status'),
             ),
           ],
         ),
@@ -61,16 +107,23 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
     }
   }
 
-  Future<void> _fetchAndSaveTransactionsAsExcel() async {
+  Future<void> _fetchAndSaveTransactionsAsExcel({
+    String? startDate,
+    String? endDate,
+    String? status,
+  }) async {
     try {
-      final transactions = await transactionProvider.fetchTransactions();
+      final transactions = await transactionProvider.fetchTransactions(
+        startDate: startDate,
+        endDate: endDate,
+        status: status,
+      );
       final fileName = fileNameController.text.isEmpty
           ? 'transactions'
           : fileNameController.text;
 
-      // Fetch services to build a map of service IDs to service names
       final serviceProvider = ServiceProvider();
-      await serviceProvider.fetchServices(); // Fetch services once
+      await serviceProvider.fetchServices();
 
       final services = serviceProvider.services;
       final serviceMap = <int, String>{};
@@ -80,13 +133,14 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
         final serviceName = service['serviceName'];
         serviceMap[id] = serviceName;
       }
+
       final excel = Excel.createExcel();
       final sheet = excel['Sheet1'];
 
       // Write headers
       sheet.appendRow([
         'Transaction ID',
-        'Service Name', 
+        'Service Name',
         'Total Amount',
         'Time Duration',
         'Departure Time',
@@ -99,7 +153,7 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
       for (final transaction in transactions) {
         sheet.appendRow([
           transaction['id'],
-          serviceMap[transaction['serviceId']], 
+          serviceMap[transaction['serviceId']],
           transaction['totalAmount'],
           formatTimeDuration(transaction['timeDuration']),
           transaction['departureTime'],
@@ -131,15 +185,31 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $error'),
-          backgroundColor: Colors.red, 
+          backgroundColor: Colors.red,
         ),
       );
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+    final DateTime currentDate = DateTime.now();
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: currentDate,
+      firstDate: currentDate.subtract(const Duration(days: 365)),
+      lastDate: currentDate,
+    );
+
+    if (selectedDate != null) {
+      controller.text = selectedDate.toLocal().toString().split(' ')[0];
     }
   }
 
   @override
   void dispose() {
     fileNameController.dispose();
+    startDateController.dispose();
+    endDateController.dispose();
     super.dispose();
   }
 }
