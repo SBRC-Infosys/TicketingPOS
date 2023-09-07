@@ -7,6 +7,7 @@ class TransactionList extends StatefulWidget {
   const TransactionList({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TransactionListState createState() => _TransactionListState();
 }
 
@@ -15,7 +16,9 @@ class _TransactionListState extends State<TransactionList> {
   String? startDate;
   String? endDate;
   String? status;
-  
+  DateTime? selectedStartDate;
+  String? selectedStatus;
+  DateTime? selectedEndDate;
 
   String _formatDateTime(String? dateTimeString) {
     if (dateTimeString == null) {
@@ -29,11 +32,11 @@ class _TransactionListState extends State<TransactionList> {
     return formattedDateTime;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final transactionProvider = Provider.of<TransactionProvider>(context);
 
+    // ignore: no_leading_underscores_for_local_identifiers
     Future<void> _showEditStatusDialog(int transactionId) async {
       List<String> statusOptions = ['open', 'closed'];
       String newStatus = statusOptions[0];
@@ -57,10 +60,9 @@ class _TransactionListState extends State<TransactionList> {
                   onChanged: (value) {
                     newStatus = value!;
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Select Status',
-                    border: const OutlineInputBorder(),
-                    filled: true,
+                    border: OutlineInputBorder(),
                   ),
                   style: const TextStyle(
                     color: Colors.black,
@@ -82,9 +84,12 @@ class _TransactionListState extends State<TransactionList> {
                       transactionId: transactionId,
                       status: newStatus,
                     );
+                    // ignore: use_build_context_synchronously
                     Navigator.of(context).pop(); // Close the dialog
                   } catch (error) {
+                    // ignore: use_build_context_synchronously
                     Navigator.of(context).pop(); // Close the dialog
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Failed to edit status: $error'),
@@ -105,22 +110,26 @@ class _TransactionListState extends State<TransactionList> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Confirm Delete'),
-            content: Text('Are you sure you want to delete this transaction?'),
+            title: const Text('Confirm Delete'),
+            content:
+                const Text('Are you sure you want to delete this transaction?'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(); // Close the dialog
                 },
-                child: Text('Cancel'),
+                child: const Text('Cancel'),
               ),
               TextButton(
                 onPressed: () async {
                   try {
                     await transactionProvider.deleteTransaction(transactionId);
+                    // ignore: use_build_context_synchronously
                     Navigator.of(context).pop(); // Close the dialog
                   } catch (error) {
+                    // ignore: use_build_context_synchronously
                     Navigator.of(context).pop(); // Close the dialog
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Failed to delete transaction: $error'),
@@ -136,40 +145,99 @@ class _TransactionListState extends State<TransactionList> {
       );
     }
 
-      return ListView(
-      physics: AlwaysScrollableScrollPhysics(),
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
       children: [
         Card(
-          elevation: 3,
-          margin: const EdgeInsets.all(16),
+          margin: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
+              ListTile(
+                title: const Text('Filter Options'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    setState(() {
+                      selectedStartDate = null;
+                      startDate = null;
+                      selectedEndDate = null;
+                      endDate = null;
+                      selectedStatus = null;
+                      status = null;
+                    });
+                  },
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 10),
-                    // Add a dropdown for status
+                    TextButton(
+                      onPressed: () async {
+                        final DateTime? pickedStartDate = await showDatePicker(
+                          context: context,
+                          initialDate: selectedStartDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (pickedStartDate != null &&
+                            pickedStartDate != selectedStartDate) {
+                          setState(() {
+                            selectedStartDate = pickedStartDate;
+                            startDate = DateFormat('yyyy-MM-dd')
+                                .format(pickedStartDate);
+                          });
+                        }
+                      },
+                      child: Text(
+                        selectedStartDate != null
+                            ? 'Start Date: ${DateFormat('yyyy-MM-dd').format(selectedStartDate!)}'
+                            : 'Select Start Date',
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        final DateTime? pickedEndDate = await showDatePicker(
+                          context: context,
+                          initialDate: selectedEndDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (pickedEndDate != null &&
+                            pickedEndDate != selectedEndDate) {
+                          setState(() {
+                            selectedEndDate = pickedEndDate;
+                            endDate =
+                                DateFormat('yyyy-MM-dd').format(pickedEndDate);
+                          });
+                        }
+                      },
+                      child: Text(
+                        selectedEndDate != null
+                            ? 'End Date: ${DateFormat('yyyy-MM-dd').format(selectedEndDate!)}'
+                            : 'Select End Date',
+                      ),
+                    ),
                     DropdownButtonFormField<String>(
-                      value: status,
-                      items: ['open', 'closed'].map((status) {
+                      value: selectedStatus,
+                      items: ['Clear', 'Open', 'Closed'].map((String status) {
                         return DropdownMenuItem<String>(
-                          value: status,
-                          child: Text(status),
+                          value: status == 'Clear' ? null : status,
+                          child: Text(status == 'Clear' ? 'All' : status),
                         );
                       }).toList(),
-                      onChanged: (value) {
+                      onChanged: (String? value) {
                         setState(() {
+                          selectedStatus = value;
                           status = value;
                         });
                       },
-                      decoration: InputDecoration(
-                        labelText: 'Select Status',
-                        border: const OutlineInputBorder(),
+                      decoration: const InputDecoration(
+                        labelText: 'Status',
+                        border: OutlineInputBorder(),
                         filled: true,
-            
                       ),
                       style: const TextStyle(
                         color: Colors.black,
@@ -182,10 +250,16 @@ class _TransactionListState extends State<TransactionList> {
           ),
         ),
         FutureBuilder<List<dynamic>>(
-          future: transactionProvider.fetchTransactions(status: status),
+          future: transactionProvider.fetchTransactions(
+            startDate: startDate,
+            endDate: endDate,
+            status: status,
+          ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const Center(
+                child: CircularProgressIndicator(), // Loading indicator
+              );
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
