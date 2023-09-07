@@ -302,7 +302,7 @@ class _TransactionListState extends State<TransactionList> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                'Time Duration: ${transaction['timeDuration']}',
+                                'Time Duration: ${transaction['timeDuration']} minutes',
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
