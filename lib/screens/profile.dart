@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:ticketing_system/screens/company.dart';
+import 'package:ticketing_system/screens/register_screen.dart';
 import 'package:ticketing_system/screens/service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -122,7 +123,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SettingsGroup(
               items: [
                 SettingsItem(
-                  onTap: () {},
+                   onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>  RegisterScreen(),
+                      ),
+                    );
+                  },
                   icons: Icons.verified_user,
                   iconStyle: IconStyle(
                     iconsColor: Colors.white,
