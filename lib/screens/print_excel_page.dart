@@ -9,6 +9,7 @@ class PrintExcelPage extends StatefulWidget {
   const PrintExcelPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _PrintExcelPageState createState() => _PrintExcelPageState();
 }
 
@@ -18,11 +19,12 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
   String? selectedStatus;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    selectedStatus = 'Open'; // Default status value
+    selectedStatus = 'Open';
   }
 
   @override
@@ -31,60 +33,89 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
       appBar: AppBar(
         title: const Text('Print Excel'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Card(
+              elevation: 4, // Add elevation for a card-like effect
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: fileNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'File Name',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: startDateController,
+                      readOnly: true,
+                      onTap: () => _selectDate(context, startDateController),
+                      decoration: const InputDecoration(
+                        labelText: 'Start Date',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: endDateController,
+                      readOnly: true,
+                      onTap: () => _selectDate(context, endDateController),
+                      decoration: const InputDecoration(
+                        labelText: 'End Date',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: selectedStatus,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedStatus = value;
+                              });
+                            },
+                            items: ['Open', 'Closed'].map((status) {
+                              return DropdownMenuItem<String>(
+                                value: status,
+                                child: Text(status),
+                              );
+                            }).toList(),
+                            decoration: const InputDecoration(
+                              labelText: 'Select Status',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.refresh),
+                          onPressed: _resetFields,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                _fetchAndSaveTransactionsAsExcel(
-                  startDate: startDateController.text,
-                  endDate: endDateController.text,
-                  status: selectedStatus,
-                );
-              },
-              child: const Text('Fetch and Save as Excel'),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: fileNameController,
-              decoration: const InputDecoration(
-                labelText: 'Enter File Name',
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: startDateController,
-              readOnly: true,
-              onTap: () => _selectDate(context, startDateController),
-              decoration: const InputDecoration(
-                labelText: 'Start Date',
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: endDateController,
-              readOnly: true,
-              onTap: () => _selectDate(context, endDateController),
-              decoration: const InputDecoration(
-                labelText: 'End Date',
-              ),
-            ),
-            const SizedBox(height: 20),
-            DropdownButton<String>(
-              value: selectedStatus,
-              onChanged: (value) {
-                setState(() {
-                  selectedStatus = value;
-                });
-              },
-              items: ['Open', 'Closed'].map((status) {
-                return DropdownMenuItem<String>(
-                  value: status,
-                  child: Text(status),
-                );
-              }).toList(),
-              hint: const Text('Select Status'),
+              onPressed: isLoading
+                  ? null
+                  : () {
+                      _fetchAndSaveTransactionsAsExcel(
+                        startDate: startDateController.text,
+                        endDate: endDateController.text,
+                        status: selectedStatus,
+                      );
+                    },
+              child: Text(isLoading ? 'Saving...' : 'Save as Excel'),
             ),
           ],
         ),
@@ -191,7 +222,8 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
     final DateTime currentDate = DateTime.now();
     final DateTime? selectedDate = await showDatePicker(
       context: context,
@@ -211,5 +243,14 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
     startDateController.dispose();
     endDateController.dispose();
     super.dispose();
+  }
+
+  void _resetFields() {
+    fileNameController.clear();
+    startDateController.clear();
+    endDateController.clear();
+    setState(() {
+      selectedStatus = 'Open';
+    });
   }
 }
