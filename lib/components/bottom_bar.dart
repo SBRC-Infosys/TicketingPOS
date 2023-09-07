@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ticketing_system/screens/company.dart';
 import 'package:ticketing_system/screens/home_page.dart';
+import 'package:ticketing_system/screens/profile.dart';
 import 'package:ticketing_system/screens/service.dart';
 import 'package:ticketing_system/screens/transaction.dart';
 import 'package:ticketing_system/screens/transactionPage.dart';
@@ -22,9 +23,9 @@ class _BottomBarState extends State<BottomBar> {
   static const List<Widget> _widgetOptions = <Widget>[
     QRScannerHomePage(),
     QRCodeWidget(),
-    CreateServiceScreen(),
-    CreateCompanyScreen(),
+    // CreateServiceScreen(),
     TransactionListPage(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -64,16 +65,27 @@ class _BottomBarState extends State<BottomBar> {
             icon: SvgPicture.asset(AppStyle.eventIcon),
             label: 'Camera',
           ),
+          // BottomNavigationBarItem(
+          //   activeIcon: SvgPicture.asset(
+          //     AppStyle.reportIcon,
+          //     colorFilter: const ColorFilter.mode(
+          //       AppStyle.primarySwatch,
+          //       BlendMode.srcIn,
+          //     ),
+          //   ),
+          //   icon: SvgPicture.asset(AppStyle.reportIcon),
+          //   label: 'Services',
+          // ),
           BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
-              AppStyle.reportIcon,
+              AppStyle.notificationsIcon,
               colorFilter: const ColorFilter.mode(
                 AppStyle.primarySwatch,
                 BlendMode.srcIn,
               ),
             ),
-            icon: SvgPicture.asset(AppStyle.reportIcon),
-            label: 'Services',
+            icon: SvgPicture.asset(AppStyle.notificationsIcon),
+            label: 'Transaction',
           ),
           BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
@@ -84,18 +96,7 @@ class _BottomBarState extends State<BottomBar> {
               ),
             ),
             icon: SvgPicture.asset(AppStyle.notificationsIcon),
-            label: 'Company',
-          ),
-            BottomNavigationBarItem(
-            activeIcon: SvgPicture.asset(
-              AppStyle.notificationsIcon,
-              colorFilter: const ColorFilter.mode(
-                AppStyle.primarySwatch,
-                BlendMode.srcIn,
-              ),
-            ),
-            icon: SvgPicture.asset(AppStyle.notificationsIcon),
-            label: 'Report',
+            label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,

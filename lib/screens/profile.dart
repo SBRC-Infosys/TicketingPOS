@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
+import 'package:ticketing_system/screens/company.dart';
+import 'package:ticketing_system/screens/service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -43,9 +45,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             // ignore: avoid_unnecessary_containers
                             Container(
                               child: const CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/logo.png'),
+                                backgroundImage:
+                                    AssetImage('assets/images/logo.png'),
                                 radius: 42,
-                                backgroundColor: Color.fromARGB(255, 187, 186, 186),
+                                backgroundColor:
+                                    Color.fromARGB(255, 187, 186, 186),
                               ),
                             ),
                           ],
@@ -75,10 +79,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.0),
-                                  color: const Color.fromARGB(255, 255, 255, 255),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
                                 ),
                                 child: const Padding(
-                                  padding: EdgeInsets.only(left: 8.0, right: 8, top: 2, bottom: 2),
+                                  padding: EdgeInsets.only(
+                                      left: 8.0, right: 8, top: 2, bottom: 2),
                                   child: Text(
                                     "+977 9876134578",
                                     style: TextStyle(
@@ -138,15 +144,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   subtitle: "English",
                 ),
                 SettingsItem(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateServiceScreen(),
+                      ),
+                    );
+                  },
                   icons: Icons.book,
                   iconStyle: IconStyle(
                     iconsColor: Colors.white,
                     withBackground: true,
                     backgroundColor: Colors.black,
                   ),
-                  title: 'Download Data',
-                  subtitle: "Automatic",
+                  title: 'Services',
+                  subtitle: "Add new serviecs",
+                ),
+                SettingsItem(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateCompanyScreen(),
+                      ),
+                    );
+                  },
+                  icons: Icons.book,
+                  iconStyle: IconStyle(
+                    iconsColor: Colors.white,
+                    withBackground: true,
+                    backgroundColor: Colors.black,
+                  ),
+                  title: 'Company',
+                  subtitle: "Add company",
                 ),
               ],
             ),
