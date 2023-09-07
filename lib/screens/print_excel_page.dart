@@ -22,12 +22,6 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
   bool isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    selectedStatus = 'Open';
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +29,8 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        
+        child: ListView(
           children: [
             Card(
               elevation: 4, // Add elevation for a card-like effect
@@ -95,7 +90,7 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.refresh),
+                          icon: const Icon(Icons.refresh),
                           onPressed: _resetFields,
                         ),
                       ],
@@ -250,7 +245,7 @@ class _PrintExcelPageState extends State<PrintExcelPage> {
     startDateController.clear();
     endDateController.clear();
     setState(() {
-      selectedStatus = 'Open';
+      selectedStatus = null; // Reset the status to no selection
     });
   }
 }
