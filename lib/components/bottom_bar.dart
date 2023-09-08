@@ -89,13 +89,13 @@ class _BottomBarState extends State<BottomBar> {
           ),
           BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
-              AppStyle.notificationsIcon,
+              AppStyle.profileIcon,
               colorFilter: const ColorFilter.mode(
                 AppStyle.primarySwatch,
                 BlendMode.srcIn,
               ),
             ),
-            icon: SvgPicture.asset(AppStyle.notificationsIcon),
+            icon: SvgPicture.asset(AppStyle.profileIcon),
             label: 'Profile',
           ),
         ],

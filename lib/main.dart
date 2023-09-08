@@ -6,15 +6,12 @@ import 'package:ticketing_system/components/bottom_bar.dart';
 import 'package:ticketing_system/provider/companyProvider.dart';
 import 'package:ticketing_system/provider/serviceProvider.dart';
 import 'package:ticketing_system/provider/transactionProvider.dart';
-import 'package:ticketing_system/screens/company.dart';
+
 import 'package:ticketing_system/screens/first_sceen.dart';
-import 'package:ticketing_system/screens/home_page.dart';
+
 import 'package:ticketing_system/screens/login_screen.dart';
-import 'package:ticketing_system/screens/service.dart';
-import 'package:ticketing_system/screens/service_card.dart';
-import 'package:ticketing_system/widgets/qr_code_widget.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ticketing_system/widgets/transactionlist.dart';
 
 String initialRoute = '/'; // Default value in case of no login or unknown role
 
@@ -69,7 +66,7 @@ class MyApp extends StatelessWidget {
         "/": (context) => const FirstScreen(),
         "/LoginScreen": (context) => const LoginScreen(),
         "/UserHome": (context) => const Bar(),
-        "/AdminHome": (context) =>  const BottomBar(),
+        "/AdminHome": (context) => const BottomBar(),
         // Add your other routes here...
       },
     );

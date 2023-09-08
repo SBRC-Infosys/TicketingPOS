@@ -128,6 +128,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   icons: Icons.exit_to_app_rounded,
                   title: "Sign Out",
                 ),
+                SettingsItem(
+                  onTap: () {},
+                  icons: Icons.lock,
+                  title: "Change Password",
+                ),
               ],
             ),
           ],
