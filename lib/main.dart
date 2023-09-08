@@ -67,6 +67,7 @@ class MyApp extends StatelessWidget {
       initialRoute: initialRoute,
       routes: {
         "/": (context) => const FirstScreen(),
+        "/LoginScreen": (context) => const LoginScreen(),
         "/UserHome": (context) => const Bar(),
         "/AdminHome": (context) =>  const BottomBar(),
         // Add your other routes here...
