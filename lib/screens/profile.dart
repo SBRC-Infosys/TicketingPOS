@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:babstrap_settings_screen/babstrap_settings_screen.dart';
 import 'package:ticketing_system/screens/company.dart';
+import 'package:ticketing_system/screens/edit_user.dart';
 import 'package:ticketing_system/screens/print_excel_page.dart';
 import 'package:ticketing_system/screens/register_screen.dart';
 import 'package:ticketing_system/screens/service.dart';
+import 'package:ticketing_system/screens/userList_page.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -133,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CreateCompanyScreen(),
+                        builder: (context) =>   UserListPage(),
                       ),
                     );
                   },
