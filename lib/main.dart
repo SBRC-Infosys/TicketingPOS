@@ -6,6 +6,7 @@ import 'package:ticketing_system/components/bottom_bar.dart';
 import 'package:ticketing_system/provider/companyProvider.dart';
 import 'package:ticketing_system/provider/serviceProvider.dart';
 import 'package:ticketing_system/provider/transactionProvider.dart';
+import 'package:ticketing_system/provider/userProvider.dart';
 
 import 'package:ticketing_system/screens/first_sceen.dart';
 
@@ -41,6 +42,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => ServiceProvider()),
         ChangeNotifierProvider(create: (context) => CompanyProvider()),
         ChangeNotifierProvider(create: (context) => TransactionProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
       ],
       child: MyApp(initialRoute: initialRoute),
     ),

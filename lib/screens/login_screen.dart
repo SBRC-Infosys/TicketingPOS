@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ticketing_system/widgets/rounded_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:ticketing_system/provider/userProvider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -18,39 +18,30 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _passwordVisible = false;
 
   Future<void> _login() async {
-  final String email = _emailController.text;
-  final String password = _passwordController.text;
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
 
-  try {
-    final response = await http.post(
-      Uri.parse('http://[2400:1a00:b030:bf51::2]:5000/api/user/login'),
-      body: {
-        'email': email,
-        'password': password,
-      },
-    );
+    try {
+      // Get the UserProvider instance using Provider.of
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    if (response.statusCode == 200) {
-      // Parse the JSON response
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      final String role = responseData['role'];
+      // Call the loginUser function from UserProvider
+      await userProvider.loginUser(email: email, password: password);
 
-      // Store user login status and role
+      // After successful login, you can access user data or redirect as needed.
       final prefs = await SharedPreferences.getInstance();
-      prefs.setBool('isLoggedIn', true);
-      prefs.setString('userRole', role);
+      final String role = prefs.getString('userRole') ?? '';
 
       // Redirect based on role
       if (role == 'user') {
-        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/UserHome');
       } else if (role == 'admin') {
-        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/AdminHome');
       }
-    } else {
+    } catch (e) {
+      // Handle any errors
+      print('Error: $e');
       // Handle login error
-      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -69,12 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
     }
-  } catch (e) {
-    // Handle any network or server errors
-    print('Error: $e');
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -148,10 +134,12 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 60,
             ),
-            RoundedButton(
-                onTap: _login,
-                title: "Sign In",
-                color: const Color(0xff5568FE)),
+            ElevatedButton(
+                onPressed: _login,
+                child: const Text('Sign In'),
+                style: ElevatedButton.styleFrom(
+                  primary: const Color(0xff5568FE),
+                )),
             const SizedBox(height: 15),
           ]),
         ),

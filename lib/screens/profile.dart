@@ -5,6 +5,7 @@ import 'package:ticketing_system/screens/print_excel_page.dart';
 import 'package:ticketing_system/screens/register_screen.dart';
 import 'package:ticketing_system/screens/service.dart';
 
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -129,7 +130,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   title: "Sign Out",
                 ),
                 SettingsItem(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CreateCompanyScreen(),
+                      ),
+                    );
+                  },
                   icons: Icons.lock,
                   title: "Change Password",
                 ),
