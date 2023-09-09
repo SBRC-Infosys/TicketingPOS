@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -42,7 +40,8 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
   Future<void> _updateTransactionStatus(String transactionId) async {
     try {
       final response = await http.post(
-          Uri.parse('http://[2400:1a00:b030:5aff::2]:5000/api/transaction/$transactionId'),
+        Uri.parse(
+            'http://[2400:1a00:b030:bf51::2]:5000/api/transaction/$transactionId'),
         body: {
           'status': 'closed',
           'departureTime': DateTime.now().toString(),
@@ -52,13 +51,17 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
         final totalAmount = responseBody['totalAmount'];
+        final timeGapMinutes =
+            responseBody['timeGapMinutes']; // Add time gap retrieval
 
         print('Transaction status updated successfully');
         setState(() {
           showSuccessMessage = true;
           transactionDetails = {
             'transactionId': transactionId,
-            'totalAmount': totalAmount, // Include totalAmount in transactionDetails
+            'totalAmount': totalAmount,
+            'timeGapMinutes':
+                timeGapMinutes, // Include time gap in transactionDetails
           };
         });
       } else {
@@ -98,14 +101,20 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
               child: Column(
                 children: [
                   Text(
-                    showSuccessMessage ? "Token Closed!" : "Scan Result: $result",
+                    showSuccessMessage
+                        ? "Token Closed!"
+                        : "Scan Result: $result",
                     style: const TextStyle(fontSize: 18),
                   ),
                   if (transactionDetails != null)
                     Column(
                       children: [
-                        Text("Transaction ID: ${transactionDetails!['transactionId']}"),
-                        Text("Total Amount: \$${transactionDetails!['totalAmount']}"), // Display total amount here
+                        Text(
+                            "Transaction ID: ${transactionDetails!['transactionId']}"),
+                        Text(
+                            "Total Amount: \Rs ${transactionDetails!['totalAmount']}"),
+                        Text(
+                            "Time Gap: ${transactionDetails!['timeGapMinutes']} minutes"), // Display time gap here
                         // Display more transaction details here
                       ],
                     ),
