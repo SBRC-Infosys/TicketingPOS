@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_system/provider/companyProvider.dart';
 
-
 class CreateCompanyDialog extends StatefulWidget {
   const CreateCompanyDialog({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _CreateCompanyDialogState createState() => _CreateCompanyDialogState();
 }
 
 class _CreateCompanyDialogState extends State<CreateCompanyDialog> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _companyNameController = TextEditingController();
-  final TextEditingController _companyAddressController = TextEditingController();
-  final TextEditingController _companyPanVatNoController = TextEditingController();
-  final TextEditingController _companyTelPhoneController = TextEditingController();
+  final TextEditingController _companyAddressController =
+      TextEditingController();
+  final TextEditingController _companyPanVatNoController =
+      TextEditingController();
+  final TextEditingController _companyTelPhoneController =
+      TextEditingController();
   String selectedStatus = 'Inactive'; // Default status
 
   @override
@@ -128,7 +131,9 @@ class _CreateCompanyDialogState extends State<CreateCompanyDialog> {
                 status: selectedStatus,
               );
 
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pop(); // Close the dialog
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Company created successfully'),
