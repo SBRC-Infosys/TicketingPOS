@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:http/http.dart' as http;
@@ -40,8 +39,7 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
   Future<void> _updateTransactionStatus(String transactionId) async {
     try {
       final response = await http.post(
-        Uri.parse(
-            'http://[2400:1a00:b030:bf51::2]:5000/api/transaction/$transactionId'),
+        Uri.parse('http://[2400:1a00:b030:bf51::2]:5000/api/transaction/$transactionId'),
         body: {
           'status': 'closed',
           'departureTime': DateTime.now().toString(),
@@ -51,17 +49,15 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
         final totalAmount = responseBody['totalAmount'];
-        final timeGapMinutes =
-            responseBody['timeGapMinutes']; // Add time gap retrieval
+        final timeGapMinutes = responseBody['timeGapMinutes'];
+        final formattedTimeGap = _formatTimeGap(timeGapMinutes);
 
-        print('Transaction status updated successfully');
         setState(() {
           showSuccessMessage = true;
           transactionDetails = {
             'transactionId': transactionId,
             'totalAmount': totalAmount,
-            'timeGapMinutes':
-                timeGapMinutes, // Include time gap in transactionDetails
+            'timeGapFormatted': formattedTimeGap,
           };
         });
       } else {
@@ -69,6 +65,16 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  String _formatTimeGap(int minutes) {
+    if (minutes < 60) {
+      return '$minutes minutes';
+    } else {
+      int hours = minutes ~/ 60;
+      int remainingMinutes = minutes % 60;
+      return '$hours hr $remainingMinutes minutes';
     }
   }
 
@@ -86,49 +92,65 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
       appBar: AppBar(
         title: const Text("QR Code Scanner"),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Column(
-                children: [
-                  Text(
-                    showSuccessMessage
-                        ? "Token Closed!"
-                        : "Scan Result: $result",
-                    style: const TextStyle(fontSize: 18),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white,
+                  width: 4.0,
+                ),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                    width: 2.0,
                   ),
-                  if (transactionDetails != null)
-                    Column(
-                      children: [
-                        Text(
-                            "Transaction ID: ${transactionDetails!['transactionId']}"),
-                        Text(
-                            "Total Amount: \Rs ${transactionDetails!['totalAmount']}"),
-                        Text(
-                            "Time Gap: ${transactionDetails!['timeGapMinutes']} minutes"), // Display time gap here
-                        // Display more transaction details here
-                      ],
-                    ),
-                  if (showSuccessMessage)
-                    ElevatedButton(
-                      onPressed: _resetScan,
-                      child: const Text("Scan Again"),
-                    ),
-                ],
+                ),
+                child: QRView(
+                  key: qrKey,
+                  onQRViewCreated: _onQRViewCreated,
+                ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Text(
+              showSuccessMessage ? "Ticket Closed!" : "Scan Result: $result",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: showSuccessMessage ? Colors.green : Colors.black,
+              ),
+            ),
+            if (transactionDetails != null)
+              Column(
+                children: [
+                  Text(
+                    "Total Amount: Rs ${transactionDetails!['totalAmount']}",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    "Time Gap: ${transactionDetails!['timeGapFormatted']}",
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
+            if (showSuccessMessage)
+              ElevatedButton(
+                onPressed: _resetScan,
+                child: const Text("Scan Again"),
+              ),
+          ],
+        ),
       ),
     );
   }
 }
+
+
