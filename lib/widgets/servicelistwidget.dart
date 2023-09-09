@@ -65,7 +65,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                         updatedDescription = value;
                       },
                       decoration: const InputDecoration(
-                        labelText: 'Description',
+                        labelText: 'Message',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -220,7 +220,7 @@ class _ServiceListScreenState extends State<ServiceListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Description: ${service['description']}',
+                        'Message: ${service['description']}',
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 8),

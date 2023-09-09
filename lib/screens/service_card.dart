@@ -38,7 +38,8 @@ class _ServiceListPageState extends State<ServiceListPage> {
       return '$minutes minute${minutes > 1 ? 's' : ''}';
     }
   }
- void showSnackBar(String message) {
+
+  void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -52,6 +53,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
     double price,
     String serviceName,
     String timeDuration,
+    String description,
   ) async {
     try {
       final newTransactionId = await transactionProvider.createTransaction(
@@ -103,16 +105,19 @@ class _ServiceListPageState extends State<ServiceListPage> {
         await printer.printText('Entry Time: ${DateTime.now()}');
 
         // Footer: Happy Playing
-        await printer.printText('*** Happy Playing ***');
+        await printer.printText(
+          '*** $description ***',
+        );
 
         await printer.closePrinter();
-           // Show a SnackBar with the message
-          showSnackBar('Bill printed and transaction created');
+        // Show a SnackBar with the message
+        showSnackBar('Bill printed and transaction created');
       }
     } catch (error) {
       print('Error creating transaction or printing receipt: $error');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +150,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                         price,
                         serviceName,
                         timeDuration.toString(),
+                        selectedService['description'],
                       );
                     },
                     child: ListTile(
@@ -159,15 +165,15 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            selectedService['description'],
-                            style: const TextStyle(
-                              fontSize: 14.0,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8.0,
-                          ),
+                          // Text(
+                          //   selectedService['description'],
+                          //   style: const TextStyle(
+                          //     fontSize: 14.0,
+                          //   ),
+                          // ),
+                          // const SizedBox(
+                          //   height: 8.0,
+                          // ),
                           Text(
                             'Price: Rs $price',
                             style: const TextStyle(
