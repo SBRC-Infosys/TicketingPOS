@@ -55,12 +55,6 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('User List'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => _fetchUsers(context), // Refresh button
-          ),
-        ],
       ),
       body: _buildUserList(context),
     );
