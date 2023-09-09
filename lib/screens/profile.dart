@@ -140,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   },
                   icons: Icons.lock,
-                  title: "Change Password",
+                  title: "Change User Details",
                 ),
               ],
             ),
