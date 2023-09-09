@@ -101,7 +101,6 @@ class _UserListPageState extends State<UserListPage> {
                     onPressed: () {
                       // Show a dialog to edit the user's information
                       _showEditDialog(context, userId.toString(), user);
-
                     },
                   ),
                 ),
@@ -113,12 +112,17 @@ class _UserListPageState extends State<UserListPage> {
     );
   }
 
-Future<void> _showEditDialog(BuildContext context, String userId, Map<String, dynamic> userData) async {
-  final TextEditingController firstnameController = TextEditingController(text: userData['firstname']);
-  final TextEditingController lastnameController = TextEditingController(text: userData['lastname']);
-  final TextEditingController emailController = TextEditingController(text: userData['email']);
-  final TextEditingController mobileController = TextEditingController(text: userData['mobile']);
-  final TextEditingController passwordController = TextEditingController();
+  Future<void> _showEditDialog(BuildContext context, String userId,
+      Map<String, dynamic> userData) async {
+    final TextEditingController firstnameController =
+        TextEditingController(text: userData['firstname']);
+    final TextEditingController lastnameController =
+        TextEditingController(text: userData['lastname']);
+    final TextEditingController emailController =
+        TextEditingController(text: userData['email']);
+    final TextEditingController mobileController =
+        TextEditingController(text: userData['mobile']);
+    final TextEditingController passwordController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -130,23 +134,42 @@ Future<void> _showEditDialog(BuildContext context, String userId, Map<String, dy
               children: <Widget>[
                 TextFormField(
                   controller: firstnameController,
-                  decoration: InputDecoration(labelText: 'First Name'),
+                  decoration: const InputDecoration(
+                    labelText: 'First Namer',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: lastnameController,
-                  decoration: InputDecoration(labelText: 'Last Name'),
+                  decoration: const InputDecoration(
+                    labelText: 'Last Name',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: mobileController,
-                  decoration: InputDecoration(labelText: 'Mobile'),
+                  decoration: const InputDecoration(
+                    labelText: 'Mobile',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: passwordController,
-                  decoration: InputDecoration(labelText: 'Password'),
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ],
             ),
@@ -169,9 +192,10 @@ Future<void> _showEditDialog(BuildContext context, String userId, Map<String, dy
                 };
                 // Call the _editUser method to update the user
                 await _editUser(context, userId, updatedUserData);
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
