@@ -263,7 +263,8 @@ class _TransactionListState extends State<TransactionList> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
-              final transactions = snapshot.data!;
+              final transactions = snapshot.data!.reversed.toList();
+
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
