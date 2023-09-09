@@ -123,8 +123,8 @@ class _UserListPageState extends State<UserListPage> {
     final TextEditingController mobileController =
         TextEditingController(text: userData['mobile']);
     final TextEditingController passwordController = TextEditingController();
-    final TextEditingController roleController =
-        TextEditingController(text: userData['role']); // Include role field
+    String selectedRole =
+        userData['role'] ?? 'user'; // Initialize the selected role
 
     await showDialog(
       context: context,
@@ -174,8 +174,20 @@ class _UserListPageState extends State<UserListPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: roleController, // Include the role controller
+                DropdownButtonFormField<String>(
+                  value: selectedRole,
+                  onChanged: (String? newValue) {
+                    // Update the selected role when the dropdown value changes
+                    setState(() {
+                      selectedRole = newValue!;
+                    });
+                  },
+                  items: <String>['user', 'admin'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                   decoration: const InputDecoration(
                     labelText: 'Role',
                     border: OutlineInputBorder(),
@@ -199,7 +211,7 @@ class _UserListPageState extends State<UserListPage> {
                   'email': emailController.text,
                   'mobile': mobileController.text,
                   'password': passwordController.text,
-                  'role': roleController.text, // Include role field
+                  'role': selectedRole, // Include the selected role
                 };
                 await _editUser(context, userId, updatedUserData);
                 Navigator.of(context).pop(); // Close the dialog
