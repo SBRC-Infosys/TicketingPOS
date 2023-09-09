@@ -123,6 +123,8 @@ class _UserListPageState extends State<UserListPage> {
     final TextEditingController mobileController =
         TextEditingController(text: userData['mobile']);
     final TextEditingController passwordController = TextEditingController();
+    final TextEditingController roleController =
+        TextEditingController(text: userData['role']); // Include role field
 
     await showDialog(
       context: context,
@@ -135,7 +137,7 @@ class _UserListPageState extends State<UserListPage> {
                 TextFormField(
                   controller: firstnameController,
                   decoration: const InputDecoration(
-                    labelText: 'First Namer',
+                    labelText: 'First Name',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -171,6 +173,14 @@ class _UserListPageState extends State<UserListPage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: roleController, // Include the role controller
+                  decoration: const InputDecoration(
+                    labelText: 'Role',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -188,11 +198,10 @@ class _UserListPageState extends State<UserListPage> {
                   'lastname': lastnameController.text,
                   'email': emailController.text,
                   'mobile': mobileController.text,
-                  'password': passwordController.text, // Include password
+                  'password': passwordController.text,
+                  'role': roleController.text, // Include role field
                 };
-                // Call the _editUser method to update the user
                 await _editUser(context, userId, updatedUserData);
-                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text('Save'),
