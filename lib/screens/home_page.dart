@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ticketing_system/screens/service_card.dart';
-import 'package:ticketing_system/widgets/qr_code_widget.dart';
+
 
 class QRScannerHomePage extends StatelessWidget {
   const QRScannerHomePage({Key? key}) : super(key: key);
@@ -9,25 +8,23 @@ class QRScannerHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("QR Scanner"),
-          actions: [
-            PopupMenuButton(
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: "logout",
-                  child: Text("Logout"),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == "logout") {
-                  // Navigate to the logout screen
-                  Navigator.pushNamed(context, '/');
-                }
-              },
+      appBar: AppBar(
+        title: const Text("QR Scanner"),
+    
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.logout, 
+              color: Colors.grey, 
             ),
-          ],
-        ),
-        body: const ServiceListPage());
+            onPressed: () {
+              // Handle logout button press
+              Navigator.pushReplacementNamed(context, '/');
+            },
+          ),
+        ],
+      ),
+      body: const ServiceListPage(),
+    );
   }
 }

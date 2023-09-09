@@ -105,8 +105,11 @@ class _ServiceListPageState extends State<ServiceListPage> {
         await printer.printText('Entry Time: ${DateTime.now()}');
 
         // Footer: Happy Playing
+        // await printer.printText(
+        //   '*** $description ***',
+        // );
         await printer.printText(
-          '*** $description ***',
+          '<b>*** $description ***</b>',
         );
 
         await printer.closePrinter();
