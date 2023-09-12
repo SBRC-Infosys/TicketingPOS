@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CompanyProvider with ChangeNotifier {
-  static const String baseUrl =  'http://[2400:1a00:b030:bf51::2]:5000/api/company';
+  static const String baseUrl =  'http://[2400:1a00:b030:307e::2]:5000/api/company';
 
 
   List<dynamic> companies = [];

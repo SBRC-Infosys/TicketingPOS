@@ -4,7 +4,7 @@ import 'dart:convert';
 
 class TransactionProvider with ChangeNotifier {
 static const String baseUrl =
-      'http://[2400:1a00:b030:bf51::2]:5000/api/transaction';
+      'http://[2400:1a00:b030:307e::2]:5000/api/transaction';
 
 
   TransactionProvider();
@@ -114,6 +114,41 @@ Future<List<dynamic>> fetchTransactions({
         notifyListeners();
       } else {
         throw Exception('Failed to delete transaction');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+    Future<Map<String, dynamic>> fetchServiceEarnings(int serviceId) async {
+    try {
+      final Uri url = Uri.parse('$baseUrl/earnings/$serviceId');
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data;
+      } else {
+        throw Exception('Failed to fetch service earnings');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Add a method to get transaction statistics by service ID
+  Future<Map<String, dynamic>> getTransactionStatsByService(int serviceId) async {
+    try {
+      final Uri url = Uri.parse('$baseUrl/stats/$serviceId');
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data;
+      } else {
+        throw Exception('Failed to get transaction statistics by service ID');
       }
     } catch (error) {
       throw error;

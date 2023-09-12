@@ -17,6 +17,9 @@ class _ServiceListPageState extends State<ServiceListPage> {
   final companyProvider = CompanyProvider();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  // Add a variable to store the selected service
+  Map<String, dynamic>? selectedService;
+
   @override
   void initState() {
     super.initState();
@@ -39,7 +42,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
     }
   }
 
-  void showSnackBar(String message) {
+    void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -124,6 +127,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+     
       body: FutureBuilder(
         future: serviceProvider.fetchServices(),
         builder: (context, snapshot) {
@@ -137,23 +141,54 @@ class _ServiceListPageState extends State<ServiceListPage> {
             return ListView.builder(
               itemCount: services.length,
               itemBuilder: (context, index) {
-                final selectedService = services[index];
-                final serviceId = selectedService['id'];
-                final price = double.parse(selectedService['price']);
-                final serviceName = selectedService['serviceName'];
-                final timeDuration = selectedService['timeDuration'];
+                final service = services[index];
+                final serviceId = service['id'];
+                final price = double.parse(service['price']);
+                final serviceName = service['serviceName'];
+                final timeDuration = service['timeDuration'];
 
                 return Card(
                   elevation: 4.0,
-                  margin: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Reduce the card width
                   child: InkWell(
                     onTap: () {
-                      createTransactionAndPrintReceipt(
-                        serviceId,
-                        price,
-                        serviceName,
-                        timeDuration.toString(),
-                        selectedService['description'],
+                      // Store the selected service
+                      selectedService = service;
+
+                      // Show a confirmation dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Create Transaction"),
+                            content: Text("Do you want to create a transaction for $serviceName?"),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("No"),
+                                onPressed: () {
+                                  // Close the dialog
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text("Yes"),
+                                onPressed: () {
+                                  // Close the dialog
+                                  Navigator.of(context).pop();
+                                  
+                                  // Create the transaction and print the receipt
+                                  createTransactionAndPrintReceipt(
+                                    serviceId,
+                                    price,
+                                    serviceName,
+                                    timeDuration.toString(),
+                                    service['description'],
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                     child: ListTile(
@@ -168,15 +203,6 @@ class _ServiceListPageState extends State<ServiceListPage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Text(
-                          //   selectedService['description'],
-                          //   style: const TextStyle(
-                          //     fontSize: 14.0,
-                          //   ),
-                          // ),
-                          // const SizedBox(
-                          //   height: 8.0,
-                          // ),
                           Text(
                             'Price: Rs $price',
                             style: const TextStyle(
