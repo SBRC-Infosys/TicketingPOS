@@ -5,7 +5,7 @@ import 'dart:convert';
 /// A provider class for managing user data, including fetching and editing user profiles
 class UserProvider with ChangeNotifier {
   /// The base URL of the remote API for user-related operations
-  static const String baseUrl = 'http://[2400:1a00:b030:307e::2]:5000/api/user';
+  static const String baseUrl = 'http://sbrcinfosys.com.np/api/user';
 
   /// Initialize a new instance of the UserProvider class
   UserProvider();
