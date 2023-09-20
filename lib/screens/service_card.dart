@@ -42,7 +42,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
     }
   }
 
-    void showSnackBar(String message) {
+  void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -124,10 +124,20 @@ class _ServiceListPageState extends State<ServiceListPage> {
     }
   }
 
+  // Function to sort services alphabetically
+  List<Map<String, dynamic>> sortServicesAlphabetically(
+      List<Map<String, dynamic>> services) {
+    services.sort((a, b) {
+      final serviceNameA = a['serviceName'] as String;
+      final serviceNameB = b['serviceName'] as String;
+      return serviceNameA.compareTo(serviceNameB);
+    });
+    return services;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: FutureBuilder(
         future: serviceProvider.fetchServices(),
         builder: (context, snapshot) {
@@ -137,11 +147,17 @@ class _ServiceListPageState extends State<ServiceListPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             final services = serviceProvider.services;
+            
+            // Cast services to List<Map<String, dynamic>> before sorting
+            final servicesList = List<Map<String, dynamic>>.from(services);
+            
+            // Sort the services alphabetically
+            final sortedServices = sortServicesAlphabetically(servicesList);
 
             return ListView.builder(
-              itemCount: services.length,
+              itemCount: sortedServices.length,
               itemBuilder: (context, index) {
-                final service = services[index];
+                final service = sortedServices[index];
                 final serviceId = service['id'];
                 final price = double.parse(service['price']);
                 final serviceName = service['serviceName'];
@@ -149,7 +165,10 @@ class _ServiceListPageState extends State<ServiceListPage> {
 
                 return Card(
                   elevation: 4.0,
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0), // Reduce the card width
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 4.0,
+                  ),
                   child: InkWell(
                     onTap: () {
                       // Store the selected service
@@ -161,7 +180,8 @@ class _ServiceListPageState extends State<ServiceListPage> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text("Create Transaction"),
-                            content: Text("Do you want to create a transaction for $serviceName?"),
+                            content:
+                                Text("Do you want to create a transaction for $serviceName?"),
                             actions: <Widget>[
                               TextButton(
                                 child: Text("No"),
@@ -175,7 +195,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
                                 onPressed: () {
                                   // Close the dialog
                                   Navigator.of(context).pop();
-                                  
+
                                   // Create the transaction and print the receipt
                                   createTransactionAndPrintReceipt(
                                     serviceId,

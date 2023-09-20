@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>   ServiceSelectionPage(),
+                        builder: (context) =>   const UserListPage(),
                       ),
                     );
                   },
