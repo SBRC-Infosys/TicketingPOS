@@ -71,49 +71,16 @@ class _ServiceListPageState extends State<ServiceListPage> {
         Sunmi printer = Sunmi();
         await printer.initialize();
 
-        // Header: Ticket Summary
-        await printer.printText('Ticket Summary');
-
-        // Company Name
-        final companies = companyProvider.companies;
-        if (companies.isNotEmpty) {
-          final companyData = companies[0];
-          final companyName = companyData['companyName'];
-          await printer.printText(companyName);
-        }
-
-        // Company Address
-        if (companies.isNotEmpty) {
-          final companyData = companies[0];
-          final companyAddress = companyData['companyAddress'];
-          await printer.printText(companyAddress);
-        }
-
-        // Service Name
-        await printer.printText(
-          'Service: $serviceName',
-        );
-
-        // QR Code (larger size)
-        await printer.printQRCode(
-          newTransactionId,
-        ); // Replace with your preferred size
-
-        // Time Duration and Price
+        await printer.printText('Service: $serviceName');
+        await printer.printQRCode(newTransactionId);
         await printer.printText(
             'Time Duration: ${formatTimeDuration(int.parse(timeDuration))}');
         await printer.printText('Price: Rs $price');
-
-        // Entry Time (Random Date)
         await printer.printText('Entry Time: ${DateTime.now()}');
+        await printer.printText('*** $description ***');
 
-        // Footer: Happy Playing
-        // await printer.printText(
-        //   '*** $description ***',
-        // );
-        await printer.printText(
-          '<b>*** $description ***</b>',
-        );
+       await printer.printText('');
+       await printer.printText('');
 
         await printer.closePrinter();
         // Show a SnackBar with the message
@@ -147,10 +114,10 @@ class _ServiceListPageState extends State<ServiceListPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             final services = serviceProvider.services;
-            
+
             // Cast services to List<Map<String, dynamic>> before sorting
             final servicesList = List<Map<String, dynamic>>.from(services);
-            
+
             // Sort the services alphabetically
             final sortedServices = sortServicesAlphabetically(servicesList);
 
@@ -180,8 +147,8 @@ class _ServiceListPageState extends State<ServiceListPage> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text("Create Transaction"),
-                            content:
-                                Text("Do you want to create a transaction for $serviceName?"),
+                            content: Text(
+                                "Do you want to create a transaction for $serviceName?"),
                             actions: <Widget>[
                               TextButton(
                                 child: Text("No"),

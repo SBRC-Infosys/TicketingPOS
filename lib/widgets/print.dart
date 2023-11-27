@@ -28,7 +28,7 @@ class Sunmi {
   Future<void> printQRCode(String text) async {
     await SunmiPrinter.setAlignment(SunmiPrintAlign.CENTER);
     await SunmiPrinter.printQRCode(text);
-    await SunmiPrinter.lineWrap(1);
+    // await SunmiPrinter.lineWrap(1);
   }
 
   Future<void> closePrinter() async {
