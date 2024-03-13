@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ServiceProvider with ChangeNotifier {
- static const String baseUrl = 'http://sbrcinfosys.com.np/api/service';
+ static const String baseUrl = 'https://demo.sbrcinfosys.com.np/api/service';
 
 
   List<dynamic> services = [];

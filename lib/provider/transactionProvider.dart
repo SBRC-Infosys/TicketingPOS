@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class TransactionProvider with ChangeNotifier {
-static const String baseUrl = 'http://sbrcinfosys.com.np/api/transaction';
+static const String baseUrl = 'https://demo.sbrcinfosys.com.np/api/transaction';
 
 
   TransactionProvider();

@@ -53,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       final response = await http.post(
-         Uri.parse('http://sbrcinfosys.com.np/api/user/register'),
+         Uri.parse('https://demo.sbrcinfosys.com.np/api/user/register'),
         body: {
           'firstname': firstName,
           'lastname': lastName,

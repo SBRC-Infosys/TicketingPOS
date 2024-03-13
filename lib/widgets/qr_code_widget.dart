@@ -39,7 +39,7 @@ class _QRCodeWidgetState extends State<QRCodeWidget> {
   Future<void> _updateTransactionStatus(String transactionId) async {
     try {
       final response = await http.post(
-        Uri.parse('http://sbrcinfosys.com.np/api/transaction/$transactionId'),
+        Uri.parse('https://demo.sbrcinfosys.com.np/api/transaction/$transactionId'),
         body: {
           'status': 'closed',
           'departureTime': DateTime.now().toString(),

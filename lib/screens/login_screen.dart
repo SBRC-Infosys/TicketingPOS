@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   try {
     final response = await http.post(
-       Uri.parse('http://sbrcinfosys.com.np/api/user/login'),
+       Uri.parse('https://demo.sbrcinfosys.com.np/api/user/login'),
       body: {
         'email': email,
         'password': password,
